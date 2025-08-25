@@ -16,6 +16,44 @@ class Log:
     _initialized = False
     
     @classmethod
+    def _get_caller_info(cls):
+        """获取调用者信息"""
+        import inspect
+        
+        # 获取调用栈
+        stack = inspect.stack()
+        
+        # 查找第一个非logger的调用者
+        caller_frame = None
+        for frame_info in stack[1:]:  # 跳过当前帧
+            if 'logger.py' not in frame_info.filename and 'core.utils.logger' not in frame_info.filename:
+                caller_frame = frame_info
+                break
+        
+        if caller_frame is None:
+            # 如果找不到，使用栈中的第二个帧（跳过当前方法）
+            caller_frame = stack[2] if len(stack) > 2 else stack[1]
+        
+        # 提取更清晰的文件名
+        filename = caller_frame.filename
+        if filename.endswith('.py'):
+            filename = filename[:-3]  # 移除.py后缀
+        
+        # 获取相对路径，去掉项目根目录
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        if filename.startswith(project_root):
+            filename = filename[len(project_root):].lstrip('/')
+        
+        # 将路径分隔符替换为点
+        filename = filename.replace('/', '.').replace('\\', '.')
+        
+        return {
+            'name': filename,
+            'function': caller_frame.function,
+            'line': caller_frame.lineno
+        }
+    
+    @classmethod
     def _ensure_initialized(cls):
         """确保日志系统已初始化"""
         if not cls._initialized:
@@ -36,7 +74,7 @@ class Log:
         console_format = (
             "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
             "<level>{level: <8}</level> | "
-            "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | "
+            "<cyan>{extra[name]}</cyan>:<cyan>{extra[function]}</cyan>:<cyan>{extra[line]}</cyan> | "
             "<level>{message}</level>"
         )
         
@@ -44,7 +82,7 @@ class Log:
         file_format = (
             "{time:YYYY-MM-DD HH:mm:ss} | "
             "{level: <8} | "
-            "{name}:{function}:{line} | "
+            "{extra[name]}:{extra[function]}:{extra[line]} | "
             "{message}"
         )
         
@@ -80,19 +118,22 @@ class Log:
     def debug(cls, message: str, *args, **kwargs):
         """记录调试日志"""
         cls._ensure_initialized()
-        logger.debug(message, *args, **kwargs)
+        caller_info = cls._get_caller_info()
+        logger.bind(**caller_info).debug(message, *args, **kwargs)
     
     @classmethod
     def info(cls, message: str, *args, **kwargs):
         """记录信息日志"""
         cls._ensure_initialized()
-        logger.info(message, *args, **kwargs)
+        caller_info = cls._get_caller_info()
+        logger.bind(**caller_info).info(message, *args, **kwargs)
     
     @classmethod
     def warning(cls, message: str, *args, **kwargs):
         """记录警告日志"""
         cls._ensure_initialized()
-        logger.warning(message, *args, **kwargs)
+        caller_info = cls._get_caller_info()
+        logger.bind(**caller_info).warning(message, *args, **kwargs)
     
     @classmethod
     def warn(cls, message: str, *args, **kwargs):
@@ -103,25 +144,29 @@ class Log:
     def error(cls, message: str, *args, **kwargs):
         """记录错误日志"""
         cls._ensure_initialized()
-        logger.error(message, *args, **kwargs)
+        caller_info = cls._get_caller_info()
+        logger.bind(**caller_info).error(message, *args, **kwargs)
     
     @classmethod
     def critical(cls, message: str, *args, **kwargs):
         """记录严重错误日志"""
         cls._ensure_initialized()
-        logger.critical(message, *args, **kwargs)
+        caller_info = cls._get_caller_info()
+        logger.bind(**caller_info).critical(message, *args, **kwargs)
     
     @classmethod
     def exception(cls, message: str, *args, **kwargs):
         """记录异常日志（包含堆栈信息）"""
         cls._ensure_initialized()
-        logger.exception(message, *args, **kwargs)
+        caller_info = cls._get_caller_info()
+        logger.bind(**caller_info).exception(message, *args, **kwargs)
     
     @classmethod
     def success(cls, message: str, *args, **kwargs):
         """记录成功日志"""
         cls._ensure_initialized()
-        logger.success(message, *args, **kwargs)
+        caller_info = cls._get_caller_info()
+        logger.bind(**caller_info).success(message, *args, **kwargs)
     
 
     
