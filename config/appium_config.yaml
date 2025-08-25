@@ -1,0 +1,37 @@
+# Appium Configuration Example
+# Appium配置示例
+
+# 服务器配置
+server_url: "http://localhost:4723"
+server_host: "localhost"
+server_port: 4723
+
+# 会话配置
+timeout: 30
+implicit_wait: 10
+new_command_timeout: 60
+
+# 平台配置
+platform_name: "Android"
+platform_version: "11.0"
+device_name: "Android Device"
+automation_name: "UiAutomator2"
+
+# 应用配置
+app_package: "com.honda.roadsync.duo"
+app_activity: ".MainActivity"
+app_path: ""
+app_bundle_id: ""
+
+# 其他配置
+no_reset: false
+full_reset: false
+auto_grant_permissions: true
+auto_accept_alerts: true
+
+# 高级配置
+additional_capabilities:
+  # 可以添加额外的capabilities
+  # 例如：
+  # "appWaitActivity": ".MainActivity"
+  # "appWaitDuration": 30000
