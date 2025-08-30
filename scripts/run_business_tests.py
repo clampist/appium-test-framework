@@ -132,7 +132,7 @@ class BusinessTestRunner:
         
         # 执行命令
         command = " ".join(cmd_parts)
-        Log.info(f"Executing command: {command}")
+        Log.info(f"[Executing Command][CMD]: {command}")
         
         try:
             result = subprocess.run(

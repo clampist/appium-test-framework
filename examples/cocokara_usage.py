@@ -21,7 +21,7 @@ def main():
     config = AppiumConfig(
         server_url="http://127.0.0.1:4723",
         platform_name="Android",
-        platform_version="14",
+        platform_version="13",
         device_name="emulator-5554",
         automation_name="UiAutomator2",
         app_package=CocokaraTestData.APP_PACKAGE,

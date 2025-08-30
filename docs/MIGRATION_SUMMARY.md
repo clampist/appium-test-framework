@@ -135,7 +135,7 @@ python run_tests.py --test-path tests/jp.co.matsukiyococokara.app/
 
 ### Appium配置
 - **服务器**: http://127.0.0.1:4723
-- **平台**: Android 14
+- **平台**: Android 13
 - **设备**: emulator-5554
 - **自动化**: UiAutomator2
 - **应用包名**: jp.co.matsukiyococokara.app
