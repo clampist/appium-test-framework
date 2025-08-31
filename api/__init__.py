@@ -1,6 +1,6 @@
 """
 ATF API Package
-对外对内交互层接口层，提供API接口和数据模型
+External and internal interaction layer interface layer, providing API interfaces and data models
 """
 
 __version__ = "1.0.0"

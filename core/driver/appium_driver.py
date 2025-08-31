@@ -1,6 +1,6 @@
 """
 Appium Driver Management
-Appium驱动管理类
+Appium driver management class
 """
 
 import time
@@ -16,14 +16,14 @@ from ..config.appium_config import AppiumConfig
 
 
 class AppiumDriver:
-    """Appium驱动管理类"""
+    """Appium driver management class"""
     
     def __init__(self, config: AppiumConfig):
         """
-        初始化Appium驱动
+        Initialize Appium driver
         
         Args:
-            config: Appium配置对象
+            config: Appium configuration object
         """
         self.config = config
         self.driver: Optional[webdriver.Remote] = None
@@ -32,21 +32,21 @@ class AppiumDriver:
         
     def start_driver(self) -> webdriver.Remote:
         """
-        启动Appium驱动
+        Start Appium driver
         
         Returns:
-            webdriver.Remote: Appium驱动实例
+            webdriver.Remote: Appium driver instance
         """
         try:
             Log.info("Starting Appium driver...")
             
-            # 构建capabilities
+            # Build capabilities
             capabilities = self.config.get_capabilities()
             
-            # 创建驱动 - 使用新版本Selenium API
+            # Create driver - using new version Selenium API
             from selenium.webdriver.common.options import ArgOptions
             
-            # 创建Appium选项
+            # Create Appium options
             options = ArgOptions()
             for key, value in capabilities.items():
                 options.set_capability(key, value)
@@ -56,10 +56,10 @@ class AppiumDriver:
                 options=options
             )
             
-            # 设置显式等待
+            # Set explicit wait
             self.wait = WebDriverWait(self.driver, self.config.timeout)
             
-            # 获取会话ID
+            # Get session ID
             self._session_id = self.driver.session_id
             
             Log.info(f"Appium driver started successfully. Session ID: {self._session_id}")
@@ -70,7 +70,7 @@ class AppiumDriver:
             raise
     
     def quit_driver(self):
-        """关闭Appium驱动"""
+        """Close Appium driver"""
         if self.driver:
             try:
                 Log.info("Quitting Appium driver...")
@@ -84,15 +84,15 @@ class AppiumDriver:
     
     def find_element(self, by: str, value: str, timeout: Optional[int] = None):
         """
-        查找元素（带显式等待）
+        Find element (with explicit wait)
         
         Args:
-            by: 定位方式
-            value: 定位值
-            timeout: 超时时间（秒）
+            by: Locator method
+            value: Locator value
+            timeout: Timeout (seconds)
             
         Returns:
-            找到的元素
+            Found element
         """
         if not self.driver:
             raise WebDriverException("Driver not initialized")
@@ -111,15 +111,15 @@ class AppiumDriver:
     
     def find_elements(self, by: str, value: str, timeout: Optional[int] = None):
         """
-        查找多个元素
+        Find multiple elements
         
         Args:
-            by: 定位方式
-            value: 定位值
-            timeout: 超时时间（秒）
+            by: Locator method
+            value: Locator value
+            timeout: Timeout (seconds)
             
         Returns:
-            找到的元素列表
+            List of found elements
         """
         if not self.driver:
             raise WebDriverException("Driver not initialized")
@@ -138,15 +138,15 @@ class AppiumDriver:
     
     def wait_for_element_clickable(self, by: str, value: str, timeout: Optional[int] = None):
         """
-        等待元素可点击
+        Wait for element to be clickable
         
         Args:
-            by: 定位方式
-            value: 定位值
-            timeout: 超时时间（秒）
+            by: Locator method
+            value: Locator value
+            timeout: Timeout (seconds)
             
         Returns:
-            可点击的元素
+            Clickable element
         """
         if not self.driver:
             raise WebDriverException("Driver not initialized")
@@ -165,13 +165,13 @@ class AppiumDriver:
     
     def take_screenshot(self, filename: Optional[str] = None) -> str:
         """
-        截图
+        Take screenshot
         
         Args:
-            filename: 文件名（可选）
+            filename: Filename (optional)
             
         Returns:
-            截图文件路径
+            Screenshot file path
         """
         if not self.driver:
             raise WebDriverException("Driver not initialized")
@@ -189,28 +189,28 @@ class AppiumDriver:
             raise
     
     def get_page_source(self) -> str:
-        """获取页面源码"""
+        """Get page source"""
         if not self.driver:
             raise WebDriverException("Driver not initialized")
         
         return self.driver.page_source
     
     def get_current_activity(self) -> str:
-        """获取当前Activity（Android）"""
+        """Get current activity (Android)"""
         if not self.driver:
             raise WebDriverException("Driver not initialized")
         
         return self.driver.current_activity
     
     def get_current_package(self) -> str:
-        """获取当前包名（Android）"""
+        """Get current package name (Android)"""
         if not self.driver:
             raise WebDriverException("Driver not initialized")
         
         return self.driver.current_package
     
     def activate_app(self, app_package: str):
-        """激活应用"""
+        """Activate app"""
         try:
             Log.info(f"Activating app: {app_package}")
             self.driver.activate_app(app_package)
@@ -220,7 +220,7 @@ class AppiumDriver:
             raise
     
     def terminate_app(self, app_package: str):
-        """终止应用"""
+        """Terminate app"""
         try:
             Log.info(f"Terminating app: {app_package}")
             self.driver.terminate_app(app_package)
@@ -231,11 +231,11 @@ class AppiumDriver:
     
     def tap(self, coordinates, count: int = 1):
         """
-        点击屏幕指定坐标
+        Tap at specified coordinates on screen
         
         Args:
-            coordinates: 坐标列表，格式为 [(x, y)] 或 [(x, y), (x2, y2), ...]
-            count: 点击次数（默认为1）
+            coordinates: Coordinate list, format as [(x, y)] or [(x, y), (x2, y2), ...]
+            count: Number of taps (default 1)
         """
         try:
             Log.info(f"Tapping at coordinates {coordinates} {count} time(s)")
@@ -247,10 +247,10 @@ class AppiumDriver:
     
     @property
     def session_id(self) -> Optional[str]:
-        """获取会话ID"""
+        """Get session ID"""
         return self._session_id
     
     @property
     def is_driver_active(self) -> bool:
-        """检查驱动是否活跃"""
+        """Check if driver is active"""
         return self.driver is not None

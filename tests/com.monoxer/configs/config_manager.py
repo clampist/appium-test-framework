@@ -1,0 +1,223 @@
+"""
+Configuration Manager for Monoxer Tests
+Handles loading and managing configuration from YAML files
+"""
+
+import os
+import yaml
+from typing import Dict, Any, Optional
+from pathlib import Path
+
+
+class ConfigManager:
+    """Configuration manager for test configurations"""
+    
+    def __init__(self, config_dir: str = "configs"):
+        # Get the directory where this file is located
+        current_file = Path(__file__)
+        base_dir = current_file.parent
+        self.config_dir = base_dir / config_dir
+        self._config_cache = {}
+    
+    def load_config(self, config_file: str) -> Dict[str, Any]:
+        """
+        Load configuration from YAML file
+        
+        Args:
+            config_file: Configuration file name
+            
+        Returns:
+            Dict containing configuration data
+        """
+        config_path = self.config_dir / config_file
+        
+        if not config_path.exists():
+            raise FileNotFoundError(f"Configuration file not found: {config_path}")
+        
+        # Check cache first
+        if str(config_path) in self._config_cache:
+            return self._config_cache[str(config_path)]
+        
+        try:
+            with open(config_path, 'r', encoding='utf-8') as f:
+                config = yaml.safe_load(f)
+                self._config_cache[str(config_path)] = config
+                return config
+        except yaml.YAMLError as e:
+            raise ValueError(f"Invalid YAML format in {config_file}: {e}")
+        except Exception as e:
+            raise RuntimeError(f"Failed to load configuration from {config_file}: {e}")
+    
+    def get_appium_config(self, language: str = "en", config_file: str = "appium_config.yaml") -> Dict[str, Any]:
+        """
+        Get Appium configuration for specific language
+        
+        Args:
+            language: Language code (en, ja)
+            config_file: Configuration file name
+            
+        Returns:
+            Dict containing Appium capabilities
+        """
+        config = self.load_config(config_file)
+        
+        # Get common capabilities
+        common_caps = config.get('common', {})
+        
+        # Get environment-specific capabilities
+        env_caps = config.get('environments', {}).get(language, {})
+        
+        if not env_caps:
+            raise ValueError(f"Configuration for language '{language}' not found")
+        
+        # Merge common and environment-specific capabilities
+        appium_caps = {**common_caps, **env_caps}
+        
+        # Convert to Appium format (add 'appium:' prefix where needed)
+        formatted_caps = {}
+        for key, value in appium_caps.items():
+            if key in ['platformName', 'platformVersion', 'deviceName', 'automationName']:
+                formatted_caps[key] = value
+            else:
+                formatted_caps[f'appium:{key}'] = value
+        
+        return formatted_caps
+    
+    def get_server_config(self, config_file: str = "appium_config.yaml") -> Dict[str, Any]:
+        """
+        Get Appium server configuration
+        
+        Args:
+            config_file: Configuration file name
+            
+        Returns:
+            Dict containing server configuration
+        """
+        config = self.load_config(config_file)
+        return config.get('server', {})
+    
+    def get_timeout_config(self, config_file: str = "appium_config.yaml") -> Dict[str, Any]:
+        """
+        Get timeout configuration
+        
+        Args:
+            config_file: Configuration file name
+            
+        Returns:
+            Dict containing timeout settings
+        """
+        config = self.load_config(config_file)
+        return config.get('timeouts', {})
+    
+    def get_screenshot_config(self, config_file: str = "appium_config.yaml") -> Dict[str, Any]:
+        """
+        Get screenshot configuration
+        
+        Args:
+            config_file: Configuration file name
+            
+        Returns:
+            Dict containing screenshot settings
+        """
+        config = self.load_config(config_file)
+        return config.get('screenshots', {})
+    
+    def get_logging_config(self, config_file: str = "appium_config.yaml") -> Dict[str, Any]:
+        """
+        Get logging configuration
+        
+        Args:
+            config_file: Configuration file name
+            
+        Returns:
+            Dict containing logging settings
+        """
+        config = self.load_config(config_file)
+        return config.get('logging', {})
+    
+    def list_available_languages(self, config_file: str = "appium_config.yaml") -> list:
+        """
+        List available language configurations
+        
+        Args:
+            config_file: Configuration file name
+            
+        Returns:
+            List of available language codes
+        """
+        config = self.load_config(config_file)
+        return list(config.get('environments', {}).keys())
+    
+    def validate_config(self, config_file: str = "appium_config.yaml") -> bool:
+        """
+        Validate configuration file
+        
+        Args:
+            config_file: Configuration file name
+            
+        Returns:
+            True if valid, raises exception if invalid
+        """
+        config = self.load_config(config_file)
+        
+        # Check required sections
+        required_sections = ['common', 'environments']
+        for section in required_sections:
+            if section not in config:
+                raise ValueError(f"Missing required section: {section}")
+        
+        # Check common capabilities
+        required_common = ['platformName', 'appPackage', 'appActivity']
+        for cap in required_common:
+            if cap not in config['common']:
+                raise ValueError(f"Missing required common capability: {cap}")
+        
+        # Check environments
+        if not config['environments']:
+            raise ValueError("No environments defined")
+        
+        # Check each environment has required capabilities
+        required_env = ['platformVersion', 'deviceName']
+        for lang, env_config in config['environments'].items():
+            for cap in required_env:
+                if cap not in env_config:
+                    raise ValueError(f"Missing required capability '{cap}' for language '{lang}'")
+        
+        return True
+
+
+# Global config manager instance
+config_manager = ConfigManager(".")
+
+
+def get_appium_config(language: str = "en") -> Dict[str, Any]:
+    """
+    Convenience function to get Appium configuration
+    
+    Args:
+        language: Language code (en, ja)
+        
+    Returns:
+        Dict containing Appium capabilities
+    """
+    return config_manager.get_appium_config(language)
+
+
+def get_server_config() -> Dict[str, Any]:
+    """
+    Convenience function to get server configuration
+    
+    Returns:
+        Dict containing server configuration
+    """
+    return config_manager.get_server_config()
+
+
+def get_timeout_config() -> Dict[str, Any]:
+    """
+    Convenience function to get timeout configuration
+    
+    Returns:
+        Dict containing timeout settings
+    """
+    return config_manager.get_timeout_config()

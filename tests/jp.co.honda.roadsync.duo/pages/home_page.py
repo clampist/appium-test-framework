@@ -1,6 +1,6 @@
 """
 Home Page Object
-主页对象
+Home page object
 """
 
 from appium.webdriver.common.appiumby import AppiumBy
@@ -9,11 +9,11 @@ from core.utils.logger import Log
 
 
 class HomePage(PageObject):
-    """主页对象"""
+    """Home page object"""
     
     def _init_elements(self):
-        """初始化页面元素"""
-        # 欢迎消息
+        """Initialize page elements"""
+        # Welcome message
         self.add_element(
             "welcome_message",
             AppiumBy.ID,
@@ -21,7 +21,7 @@ class HomePage(PageObject):
             "Welcome Message"
         )
         
-        # 车辆列表
+        # Vehicle list
         self.add_element(
             "vehicle_list",
             AppiumBy.ID,
@@ -29,7 +29,7 @@ class HomePage(PageObject):
             "Vehicle List"
         )
         
-        # 添加车辆按钮
+        # Add vehicle button
         self.add_element(
             "add_vehicle_button",
             AppiumBy.ID,
@@ -37,7 +37,7 @@ class HomePage(PageObject):
             "Add Vehicle Button"
         )
         
-        # 设置按钮
+        # Settings button
         self.add_element(
             "settings_button",
             AppiumBy.ID,
@@ -45,7 +45,7 @@ class HomePage(PageObject):
             "Settings Button"
         )
         
-        # 用户头像
+        # User avatar
         self.add_element(
             "user_avatar",
             AppiumBy.ID,
@@ -53,7 +53,7 @@ class HomePage(PageObject):
             "User Avatar"
         )
         
-        # 登出按钮
+        # Logout button
         self.add_element(
             "logout_button",
             AppiumBy.ID,
@@ -61,7 +61,7 @@ class HomePage(PageObject):
             "Logout Button"
         )
         
-        # 最近行程
+        # Recent trips
         self.add_element(
             "recent_trips",
             AppiumBy.ID,
@@ -69,7 +69,7 @@ class HomePage(PageObject):
             "Recent Trips"
         )
         
-        # 通知按钮
+        # Notifications button
         self.add_element(
             "notifications_button",
             AppiumBy.ID,
@@ -78,13 +78,13 @@ class HomePage(PageObject):
         )
     
     def wait_for_page_load(self, timeout=None):
-        """等待页面加载完成"""
+        """Wait for page to load completely"""
         Log.info("Waiting for home page to load...")
         self.wait_for_element("welcome_message", timeout)
         self.wait_for_element("vehicle_list", timeout)
     
     def is_page_loaded(self) -> bool:
-        """检查页面是否加载完成"""
+        """Check if page is loaded completely"""
         try:
             return (self.is_element_displayed("welcome_message") and
                     self.is_element_displayed("vehicle_list"))
@@ -93,10 +93,10 @@ class HomePage(PageObject):
     
     def get_welcome_message(self) -> str:
         """
-        获取欢迎消息
+        Get welcome message
         
         Returns:
-            str: 欢迎消息
+            str: Welcome message
         """
         try:
             return self.get_element_text("welcome_message")
@@ -104,43 +104,43 @@ class HomePage(PageObject):
             return ""
     
     def click_add_vehicle(self):
-        """点击添加车辆按钮"""
+        """Click add vehicle button"""
         Log.info("Clicking add vehicle button")
         self.click_element("add_vehicle_button")
     
     def click_settings(self):
-        """点击设置按钮"""
+        """Click settings button"""
         Log.info("Clicking settings button")
         self.click_element("settings_button")
     
     def click_user_avatar(self):
-        """点击用户头像"""
+        """Click user avatar"""
         Log.info("Clicking user avatar")
         self.click_element("user_avatar")
     
     def logout(self):
-        """执行登出操作"""
+        """Perform logout operation"""
         Log.info("Performing logout")
         
-        # 点击用户头像
+        # Click user avatar
         self.click_user_avatar()
         
-        # 点击登出按钮
+        # Click logout button
         self.click_element("logout_button")
         
         Log.info("Logout completed")
     
     def click_notifications(self):
-        """点击通知按钮"""
+        """Click notifications button"""
         Log.info("Clicking notifications button")
         self.click_element("notifications_button")
     
     def get_vehicle_count(self) -> int:
         """
-        获取车辆数量
+        Get vehicle count
         
         Returns:
-            int: 车辆数量
+            int: Vehicle count
         """
         try:
             vehicle_elements = self.find_elements(
@@ -153,10 +153,10 @@ class HomePage(PageObject):
     
     def select_vehicle(self, vehicle_index: int = 0):
         """
-        选择车辆
+        Select vehicle
         
         Args:
-            vehicle_index: 车辆索引（默认为0，选择第一辆车）
+            vehicle_index: Vehicle index (default 0, select first vehicle)
         """
         Log.info(f"Selecting vehicle at index: {vehicle_index}")
         
@@ -178,10 +178,10 @@ class HomePage(PageObject):
     
     def get_recent_trips_count(self) -> int:
         """
-        获取最近行程数量
+        Get recent trips count
         
         Returns:
-            int: 行程数量
+            int: Trip count
         """
         try:
             trip_elements = self.find_elements(
@@ -194,10 +194,10 @@ class HomePage(PageObject):
     
     def select_recent_trip(self, trip_index: int = 0):
         """
-        选择最近行程
+        Select recent trip
         
         Args:
-            trip_index: 行程索引（默认为0，选择第一个行程）
+            trip_index: Trip index (default 0, select first trip)
         """
         Log.info(f"Selecting recent trip at index: {trip_index}")
         
@@ -219,35 +219,35 @@ class HomePage(PageObject):
     
     def is_vehicle_list_empty(self) -> bool:
         """
-        检查车辆列表是否为空
+        Check if vehicle list is empty
         
         Returns:
-            bool: 是否为空
+            bool: Whether empty
         """
         return self.get_vehicle_count() == 0
     
     def is_recent_trips_empty(self) -> bool:
         """
-        检查最近行程是否为空
+        Check if recent trips is empty
         
         Returns:
-            bool: 是否为空
+            bool: Whether empty
         """
         return self.get_recent_trips_count() == 0
     
     def get_user_info(self) -> dict:
         """
-        获取用户信息
+        Get user information
         
         Returns:
-            dict: 用户信息
+            dict: User information
         """
         try:
-            # 点击用户头像获取用户信息
+            # Click user avatar to get user info
             self.click_user_avatar()
             
-            # 这里应该获取用户信息页面的数据
-            # 目前返回模拟数据
+            # Should get user info page data here
+            # Currently return mock data
             user_info = {
                 "username": "testuser@honda.com",
                 "full_name": "Test User",
@@ -263,9 +263,9 @@ class HomePage(PageObject):
     
     def take_home_screenshot(self, name: str = "home_page"):
         """
-        截取主页截图
+        Take home page screenshot
         
         Args:
-            name: 截图名称
+            name: Screenshot name
         """
         self.take_screenshot(name)

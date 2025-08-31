@@ -1,6 +1,6 @@
 """
 Device Configuration
-设备配置管理类
+Device configuration management class
 """
 
 import os
@@ -13,9 +13,9 @@ from ..utils.file_utils import FileUtils
 
 @dataclass
 class DeviceConfig:
-    """设备配置类"""
+    """Device configuration class"""
     
-    # 设备基本信息
+    # Device basic information
     device_id: str = ""
     device_name: str = ""
     platform: str = "Android"  # Android/iOS
@@ -23,34 +23,34 @@ class DeviceConfig:
     manufacturer: str = ""
     model: str = ""
     
-    # 屏幕配置
+    # Screen configuration
     screen_width: int = 0
     screen_height: int = 0
     screen_density: float = 0.0
     
-    # 网络配置
+    # Network configuration
     wifi_enabled: bool = True
     mobile_data_enabled: bool = True
     airplane_mode: bool = False
     
-    # 语言和地区
+    # Language and region
     language: str = "en"
     country: str = "US"
     locale: str = "en_US"
     
-    # 时区
+    # Timezone
     timezone: str = "UTC"
     
-    # 其他配置
+    # Other configuration
     additional_config: Dict[str, Any] = field(default_factory=dict)
     
     def __post_init__(self):
-        """初始化后处理"""
-        # 从环境变量加载配置
+        """Post-initialization processing"""
+        # Load configuration from environment variables
         self._load_from_env()
     
     def _load_from_env(self):
-        """从环境变量加载配置"""
+        """Load configuration from environment variables"""
         env_mappings = {
             'DEVICE_ID': 'device_id',
             'DEVICE_NAME': 'device_name',
@@ -70,7 +70,7 @@ class DeviceConfig:
         for env_var, attr_name in env_mappings.items():
             value = os.getenv(env_var)
             if value is not None:
-                # 处理数字类型
+                # Handle numeric types
                 if attr_name in ['screen_width', 'screen_height']:
                     try:
                         value = int(value)
@@ -89,10 +89,10 @@ class DeviceConfig:
     
     def get_device_info(self) -> Dict[str, Any]:
         """
-        获取设备信息
+        Get device information
         
         Returns:
-            Dict[str, Any]: 设备信息字典
+            Dict[str, Any]: Device information dictionary
         """
         device_info = {
             'device_id': self.device_id,
@@ -110,17 +110,17 @@ class DeviceConfig:
             'timezone': self.timezone,
         }
         
-        # 添加额外配置
+        # Add additional configuration
         device_info.update(self.additional_config)
         
         return device_info
     
     def to_dict(self) -> Dict[str, Any]:
         """
-        转换为字典
+        Convert to dictionary
         
         Returns:
-            Dict[str, Any]: 配置字典
+            Dict[str, Any]: Configuration dictionary
         """
         return {
             'device_id': self.device_id,
@@ -145,26 +145,26 @@ class DeviceConfig:
     @classmethod
     def from_dict(cls, config_dict: Dict[str, Any]) -> 'DeviceConfig':
         """
-        从字典创建配置对象
+        Create configuration object from dictionary
         
         Args:
-            config_dict: 配置字典
+            config_dict: Configuration dictionary
             
         Returns:
-            DeviceConfig: 配置对象
+            DeviceConfig: Configuration object
         """
         return cls(**config_dict)
     
     @classmethod
     def from_file(cls, filepath: str) -> 'DeviceConfig':
         """
-        从文件加载配置
+        Load configuration from file
         
         Args:
-            filepath: 配置文件路径
+            filepath: Configuration file path
             
         Returns:
-            DeviceConfig: 配置对象
+            DeviceConfig: Configuration object
         """
         try:
             if filepath.endswith('.json'):
@@ -183,10 +183,10 @@ class DeviceConfig:
     
     def save_to_file(self, filepath: str):
         """
-        保存配置到文件
+        Save configuration to file
         
         Args:
-            filepath: 文件路径
+            filepath: File path
         """
         try:
             config_dict = self.to_dict()
@@ -206,14 +206,14 @@ class DeviceConfig:
     
     def validate(self) -> bool:
         """
-        验证配置
+        Validate configuration
         
         Returns:
-            bool: 配置是否有效
+            bool: Whether configuration is valid
         """
         errors = []
         
-        # 检查必需字段
+        # Check required fields
         if not self.platform:
             errors.append("platform is required")
         
@@ -230,10 +230,10 @@ class DeviceConfig:
     
     def get_screen_resolution(self) -> str:
         """
-        获取屏幕分辨率字符串
+        Get screen resolution string
         
         Returns:
-            str: 屏幕分辨率（如：1920x1080）
+            str: Screen resolution (e.g., 1920x1080)
         """
         if self.screen_width and self.screen_height:
             return f"{self.screen_width}x{self.screen_height}"
@@ -241,10 +241,10 @@ class DeviceConfig:
     
     def get_device_summary(self) -> str:
         """
-        获取设备摘要信息
+        Get device summary information
         
         Returns:
-            str: 设备摘要
+            str: Device summary
         """
         parts = []
         

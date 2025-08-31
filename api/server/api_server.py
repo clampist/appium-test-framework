@@ -1,6 +1,6 @@
 """
 API Server
-API服务端，提供RESTful API服务
+API server, providing RESTful API services
 """
 
 import json
@@ -17,38 +17,38 @@ from ..models.test_case import TestCase
 
 
 class ApiServer:
-    """API服务端类"""
+    """API server class"""
     
     def __init__(self, host: str = "0.0.0.0", port: int = 5000, debug: bool = False):
         """
-        初始化API服务端
+        Initialize API server
         
         Args:
-            host: 监听主机
-            port: 监听端口
-            debug: 调试模式
+            host: Listen host
+            port: Listen port
+            debug: Debug mode
         """
         self.host = host
         self.port = port
         self.debug = debug
         
-        # 创建Flask应用
+        # Create Flask application
         self.app = Flask(__name__)
         self.app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
         
-        # 设置上传目录
+        # Set upload directory
         self.upload_folder = "uploads"
         FileUtils.ensure_dir(self.upload_folder)
         
-        # 注册路由
+        # Register routes
         self._register_routes()
         
         Log.info(f"Initialized API server on {host}:{port}")
     
     def _register_routes(self):
-        """注册API路由"""
+        """Register API routes"""
         
-        # 健康检查
+        # Health check
         @self.app.route('/health', methods=['GET'])
         def health_check():
             return jsonify({
@@ -57,7 +57,7 @@ class ApiServer:
                 'version': '1.0.0'
             })
         
-        # API信息
+        # API information
         @self.app.route('/info', methods=['GET'])
         def api_info():
             return jsonify({
@@ -73,15 +73,15 @@ class ApiServer:
                 ]
             })
         
-        # 测试用例相关路由
+        # Test case related routes
         @self.app.route('/test-cases', methods=['GET'])
         def get_test_cases():
             try:
                 project_id = request.args.get('project_id')
                 status = request.args.get('status')
                 
-                # 这里应该从数据库获取测试用例
-                # 目前返回模拟数据
+                # Should get test cases from database here
+                # Currently return mock data
                 test_cases = self._get_mock_test_cases(project_id, status)
                 
                 return jsonify({
@@ -95,7 +95,7 @@ class ApiServer:
         @self.app.route('/test-cases/<test_case_id>', methods=['GET'])
         def get_test_case(test_case_id):
             try:
-                # 这里应该从数据库获取测试用例
+                # Should get test case from database here
                 test_case = self._get_mock_test_case(test_case_id)
                 
                 if not test_case:
@@ -112,8 +112,8 @@ class ApiServer:
                 data = request.get_json()
                 test_case = TestCase.from_dict(data)
                 
-                # 这里应该保存到数据库
-                # 目前只是返回模拟数据
+                # Should save to database here
+                # Currently just return mock data
                 test_case.id = f"tc_{datetime.now().strftime('%Y%m%d%H%M%S')}"
                 
                 Log.info(f"Created test case: {test_case.id}")
@@ -130,7 +130,7 @@ class ApiServer:
                 test_case = TestCase.from_dict(data)
                 test_case.id = test_case_id
                 
-                # 这里应该更新数据库
+                # Should update database here
                 Log.info(f"Updated test case: {test_case_id}")
                 
                 return jsonify({'test_case': test_case.to_dict()})
@@ -141,7 +141,7 @@ class ApiServer:
         @self.app.route('/test-cases/<test_case_id>', methods=['DELETE'])
         def delete_test_case(test_case_id):
             try:
-                # 这里应该从数据库删除
+                # Should delete from database here
                 Log.info(f"Deleted test case: {test_case_id}")
                 
                 return jsonify({'message': 'Test case deleted successfully'})
@@ -149,7 +149,7 @@ class ApiServer:
                 Log.error(f"Error deleting test case {test_case_id}: {str(e)}")
                 return jsonify({'error': str(e)}), 500
         
-        # 测试结果相关路由
+        # Test result related routes
         @self.app.route('/test-results', methods=['GET'])
         def get_test_results():
             try:
@@ -158,7 +158,7 @@ class ApiServer:
                 start_date = request.args.get('start_date')
                 end_date = request.args.get('end_date')
                 
-                # 这里应该从数据库获取测试结果
+                # Should get test results from database here
                 test_results = self._get_mock_test_results(test_case_id, status, start_date, end_date)
                 
                 return jsonify({
@@ -172,7 +172,7 @@ class ApiServer:
         @self.app.route('/test-results/<result_id>', methods=['GET'])
         def get_test_result(result_id):
             try:
-                # 这里应该从数据库获取测试结果
+                # Should get test result from database here
                 test_result = self._get_mock_test_result(result_id)
                 
                 if not test_result:
@@ -189,7 +189,7 @@ class ApiServer:
                 data = request.get_json()
                 test_result = TestResult.from_dict(data)
                 
-                # 这里应该保存到数据库
+                # Should save to database here
                 test_result.id = f"tr_{datetime.now().strftime('%Y%m%d%H%M%S')}"
                 test_result.created_at = datetime.now()
                 
@@ -200,7 +200,7 @@ class ApiServer:
                 Log.error(f"Error submitting test result: {str(e)}")
                 return jsonify({'error': str(e)}), 500
         
-        # 文件上传路由
+        # File upload routes
         @self.app.route('/upload', methods=['POST'])
         def upload_file():
             try:
@@ -235,7 +235,7 @@ class ApiServer:
                 Log.error(f"Error uploading file: {str(e)}")
                 return jsonify({'error': str(e)}), 500
         
-        # 文件下载路由
+        # File download routes
         @self.app.route('/uploads/<filename>', methods=['GET'])
         def download_file(filename):
             try:
@@ -252,7 +252,7 @@ class ApiServer:
     
     def _get_mock_test_cases(self, project_id: Optional[str] = None, 
                             status: Optional[str] = None) -> List[TestCase]:
-        """获取模拟测试用例数据"""
+        """Get mock test case data"""
         test_cases = [
             TestCase(
                 id="tc_001",
@@ -274,7 +274,7 @@ class ApiServer:
             )
         ]
         
-        # 过滤
+        # Filter
         if project_id:
             test_cases = [tc for tc in test_cases if tc.project_id == project_id]
         
@@ -284,7 +284,7 @@ class ApiServer:
         return test_cases
     
     def _get_mock_test_case(self, test_case_id: str) -> Optional[TestCase]:
-        """获取模拟测试用例数据"""
+        """Get mock test case data"""
         test_cases = self._get_mock_test_cases()
         for tc in test_cases:
             if tc.id == test_case_id:
@@ -295,7 +295,7 @@ class ApiServer:
                               status: Optional[str] = None,
                               start_date: Optional[str] = None,
                               end_date: Optional[str] = None) -> List[TestResult]:
-        """获取模拟测试结果数据"""
+        """Get mock test result data"""
         test_results = [
             TestResult(
                 id="tr_001",
@@ -317,7 +317,7 @@ class ApiServer:
             )
         ]
         
-        # 过滤
+        # Filter
         if test_case_id:
             test_results = [tr for tr in test_results if tr.test_case_id == test_case_id]
         
@@ -327,7 +327,7 @@ class ApiServer:
         return test_results
     
     def _get_mock_test_result(self, result_id: str) -> Optional[TestResult]:
-        """获取模拟测试结果数据"""
+        """Get mock test result data"""
         test_results = self._get_mock_test_results()
         for tr in test_results:
             if tr.id == result_id:
@@ -335,7 +335,7 @@ class ApiServer:
         return None
     
     def start(self):
-        """启动API服务器"""
+        """Start API server"""
         try:
             Log.info(f"Starting API server on {self.host}:{self.port}")
             self.app.run(host=self.host, port=self.port, debug=self.debug)
@@ -344,9 +344,9 @@ class ApiServer:
             raise
     
     def stop(self):
-        """停止API服务器"""
+        """Stop API server"""
         Log.info("API server stopped")
     
     def get_app(self) -> Flask:
-        """获取Flask应用实例"""
+        """Get Flask application instance"""
         return self.app

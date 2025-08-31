@@ -1,6 +1,6 @@
 """
 Test Case Model
-测试用例数据模型
+Test case data model
 """
 
 from typing import Dict, Any, List, Optional
@@ -12,46 +12,46 @@ from core.utils.logger import Log
 
 @dataclass
 class TestCase:
-    """测试用例数据模型"""
+    """Test case data model"""
     
-    # 基本信息
+    # Basic information
     id: str = ""
     name: str = ""
     description: str = ""
     project_id: str = ""
     
-    # 状态和优先级
+    # Status and priority
     status: str = "active"  # active, inactive, deprecated
     priority: str = "medium"  # low, medium, high, critical
     
-    # 分类和标签
+    # Category and tags
     category: str = ""
     tags: List[str] = field(default_factory=list)
     
-    # 测试步骤
+    # Test steps
     steps: List[Dict[str, Any]] = field(default_factory=list)
     expected_results: List[str] = field(default_factory=list)
     
-    # 前置和后置条件
+    # Preconditions and postconditions
     preconditions: List[str] = field(default_factory=list)
     postconditions: List[str] = field(default_factory=list)
     
-    # 自动化相关
+    # Automation related
     is_automated: bool = False
     automation_script: str = ""
     automation_framework: str = ""
     
-    # 时间信息
+    # Time information
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
     created_by: str = ""
     updated_by: str = ""
     
-    # 其他信息
+    # Other information
     additional_data: Dict[str, Any] = field(default_factory=dict)
     
     def __post_init__(self):
-        """初始化后处理"""
+        """Post-initialization processing"""
         if self.created_at is None:
             self.created_at = datetime.now()
         if self.updated_at is None:
@@ -59,10 +59,10 @@ class TestCase:
     
     def to_dict(self) -> Dict[str, Any]:
         """
-        转换为字典
+        Convert to dictionary
         
         Returns:
-            Dict[str, Any]: 字典表示
+            Dict[str, Any]: Dictionary representation
         """
         return {
             'id': self.id,
@@ -90,15 +90,15 @@ class TestCase:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'TestCase':
         """
-        从字典创建对象
+        Create object from dictionary
         
         Args:
-            data: 字典数据
+            data: Dictionary data
             
         Returns:
-            TestCase: 测试用例对象
+            TestCase: Test case object
         """
-        # 处理时间字段
+        # Handle time fields
         created_at = None
         if data.get('created_at'):
             try:
@@ -138,11 +138,11 @@ class TestCase:
     
     def add_step(self, step_description: str, expected_result: str = ""):
         """
-        添加测试步骤
+        Add test step
         
         Args:
-            step_description: 步骤描述
-            expected_result: 预期结果
+            step_description: Step description
+            expected_result: Expected result
         """
         step = {
             'step_number': len(self.steps) + 1,
@@ -158,10 +158,10 @@ class TestCase:
     
     def add_tag(self, tag: str):
         """
-        添加标签
+        Add tag
         
         Args:
-            tag: 标签名称
+            tag: Tag name
         """
         if tag not in self.tags:
             self.tags.append(tag)
@@ -169,10 +169,10 @@ class TestCase:
     
     def remove_tag(self, tag: str):
         """
-        移除标签
+        Remove tag
         
         Args:
-            tag: 标签名称
+            tag: Tag name
         """
         if tag in self.tags:
             self.tags.remove(tag)
@@ -180,22 +180,22 @@ class TestCase:
     
     def has_tag(self, tag: str) -> bool:
         """
-        检查是否有指定标签
+        Check if has specified tag
         
         Args:
-            tag: 标签名称
+            tag: Tag name
             
         Returns:
-            bool: 是否有标签
+            bool: Whether has tag
         """
         return tag in self.tags
     
     def update_status(self, status: str):
         """
-        更新状态
+        Update status
         
         Args:
-            status: 新状态
+            status: New status
         """
         valid_statuses = ['active', 'inactive', 'deprecated']
         if status not in valid_statuses:
@@ -207,10 +207,10 @@ class TestCase:
     
     def update_priority(self, priority: str):
         """
-        更新优先级
+        Update priority
         
         Args:
-            priority: 新优先级
+            priority: New priority
         """
         valid_priorities = ['low', 'medium', 'high', 'critical']
         if priority not in valid_priorities:
@@ -222,11 +222,11 @@ class TestCase:
     
     def mark_as_automated(self, script_path: str = "", framework: str = ""):
         """
-        标记为自动化测试
+        Mark as automated test
         
         Args:
-            script_path: 脚本路径
-            framework: 框架名称
+            script_path: Script path
+            framework: Framework name
         """
         self.is_automated = True
         if script_path:
@@ -238,7 +238,7 @@ class TestCase:
         Log.info(f"Marked test case {self.id} as automated")
     
     def mark_as_manual(self):
-        """标记为手动测试"""
+        """Mark as manual test"""
         self.is_automated = False
         self.automation_script = ""
         self.automation_framework = ""
@@ -248,10 +248,10 @@ class TestCase:
     
     def get_summary(self) -> str:
         """
-        获取测试用例摘要
+        Get test case summary
         
         Returns:
-            str: 摘要信息
+            str: Summary information
         """
         parts = [self.name]
         
@@ -268,10 +268,10 @@ class TestCase:
     
     def validate(self) -> bool:
         """
-        验证测试用例数据
+        Validate test case data
         
         Returns:
-            bool: 是否有效
+            bool: Whether valid
         """
         errors = []
         

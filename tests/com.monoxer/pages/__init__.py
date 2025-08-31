@@ -1,6 +1,6 @@
 """
 Pages package for Monoxer App
-Monoxer应用页面对象包
+Page objects package for Monoxer App
 """
 
 from .main_page import MainPage

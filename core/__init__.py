@@ -1,6 +1,6 @@
 """
 ATF Core Package
-核心逻辑层，提供Appium测试的基础功能
+Core logic layer, providing basic functionality for Appium testing
 """
 
 __version__ = "1.0.0"

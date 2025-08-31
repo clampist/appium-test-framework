@@ -1,6 +1,6 @@
 """
 Base Element Class
-基础元素类，封装常用的元素操作方法
+Base element class, encapsulating common element operation methods
 """
 
 from typing import Optional, List
@@ -12,17 +12,17 @@ from ..utils.logger import Log
 
 
 class BaseElement:
-    """基础元素类"""
+    """Base element class"""
     
     def __init__(self, driver, by: str, value: str, name: str = ""):
         """
-        初始化元素
+        Initialize element
         
         Args:
-            driver: Appium驱动实例
-            by: 定位方式
-            value: 定位值
-            name: 元素名称（用于日志）
+            driver: Appium driver instance
+            by: Locator method
+            value: Locator value
+            name: Element name (for logging)
         """
         self.driver = driver
         self.by = by
@@ -32,13 +32,13 @@ class BaseElement:
     
     def find(self, timeout: Optional[int] = None) -> WebElement:
         """
-        查找元素
+        Find element
         
         Args:
-            timeout: 超时时间（秒）
+            timeout: Timeout (seconds)
             
         Returns:
-            WebElement: 找到的元素
+            WebElement: Found element
         """
         try:
             self._element = self.driver.find_element(self.by, self.value, timeout)
@@ -50,13 +50,13 @@ class BaseElement:
     
     def find_all(self, timeout: Optional[int] = None) -> List[WebElement]:
         """
-        查找所有匹配的元素
+        Find all matching elements
         
         Args:
-            timeout: 超时时间（秒）
+            timeout: Timeout (seconds)
             
         Returns:
-            List[WebElement]: 找到的元素列表
+            List[WebElement]: List of found elements
         """
         try:
             elements = self.driver.find_elements(self.by, self.value, timeout)
@@ -68,10 +68,10 @@ class BaseElement:
     
     def click(self, timeout: Optional[int] = None):
         """
-        点击元素
+        Click element
         
         Args:
-            timeout: 超时时间（秒）
+            timeout: Timeout (seconds)
         """
         try:
             element = self.find(timeout)
@@ -83,11 +83,11 @@ class BaseElement:
     
     def send_keys(self, text: str, timeout: Optional[int] = None):
         """
-        向元素输入文本
+        Send text to element
         
         Args:
-            text: 要输入的文本
-            timeout: 超时时间（秒）
+            text: Text to input
+            timeout: Timeout (seconds)
         """
         try:
             element = self.find(timeout)
@@ -100,13 +100,13 @@ class BaseElement:
     
     def get_text(self, timeout: Optional[int] = None) -> str:
         """
-        获取元素文本
+        Get element text
         
         Args:
-            timeout: 超时时间（秒）
+            timeout: Timeout (seconds)
             
         Returns:
-            str: 元素文本
+            str: Element text
         """
         try:
             element = self.find(timeout)
@@ -119,14 +119,14 @@ class BaseElement:
     
     def get_attribute(self, attribute: str, timeout: Optional[int] = None) -> str:
         """
-        获取元素属性
+        Get element attribute
         
         Args:
-            attribute: 属性名
-            timeout: 超时时间（秒）
+            attribute: Attribute name
+            timeout: Timeout (seconds)
             
         Returns:
-            str: 属性值
+            str: Attribute value
         """
         try:
             element = self.find(timeout)
@@ -139,13 +139,13 @@ class BaseElement:
     
     def is_displayed(self, timeout: Optional[int] = None) -> bool:
         """
-        检查元素是否可见
+        Check if element is visible
         
         Args:
-            timeout: 超时时间（秒）
+            timeout: Timeout (seconds)
             
         Returns:
-            bool: 是否可见
+            bool: Whether visible
         """
         try:
             element = self.find(timeout)
@@ -158,13 +158,13 @@ class BaseElement:
     
     def is_enabled(self, timeout: Optional[int] = None) -> bool:
         """
-        检查元素是否启用
+        Check if element is enabled
         
         Args:
-            timeout: 超时时间（秒）
+            timeout: Timeout (seconds)
             
         Returns:
-            bool: 是否启用
+            bool: Whether enabled
         """
         try:
             element = self.find(timeout)
@@ -177,13 +177,13 @@ class BaseElement:
     
     def wait_for_clickable(self, timeout: Optional[int] = None) -> WebElement:
         """
-        等待元素可点击
+        Wait for element to be clickable
         
         Args:
-            timeout: 超时时间（秒）
+            timeout: Timeout (seconds)
             
         Returns:
-            WebElement: 可点击的元素
+            WebElement: Clickable element
         """
         try:
             element = self.driver.wait_for_element_clickable(self.by, self.value, timeout)
@@ -194,7 +194,7 @@ class BaseElement:
             raise
     
     def scroll_to_element(self):
-        """滚动到元素位置"""
+        """Scroll to element position"""
         try:
             element = self.find()
             self.driver.execute_script("arguments[0].scrollIntoView(true);", element)
@@ -205,11 +205,11 @@ class BaseElement:
     
     def tap(self, x: Optional[int] = None, y: Optional[int] = None):
         """
-        点击元素（支持坐标偏移）
+        Tap element (supports coordinate offset)
         
         Args:
-            x: X坐标偏移
-            y: Y坐标偏移
+            x: X coordinate offset
+            y: Y coordinate offset
         """
         try:
             element = self.find()
@@ -225,10 +225,10 @@ class BaseElement:
     
     def long_press(self, duration: int = 2000):
         """
-        长按元素
+        Long press element
         
         Args:
-            duration: 长按持续时间（毫秒）
+            duration: Long press duration (milliseconds)
         """
         try:
             element = self.find()
@@ -240,5 +240,5 @@ class BaseElement:
     
     @property
     def element(self) -> Optional[WebElement]:
-        """获取当前元素实例"""
+        """Get current element instance"""
         return self._element

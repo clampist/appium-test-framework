@@ -1,6 +1,6 @@
 """
 Login Page Object
-登录页面对象
+Login page object
 """
 
 from appium.webdriver.common.appiumby import AppiumBy
@@ -9,11 +9,11 @@ from core.utils.logger import Log
 
 
 class LoginPage(PageObject):
-    """登录页面对象"""
+    """Login page object"""
     
     def _init_elements(self):
-        """初始化页面元素"""
-        # 用户名输入框
+        """Initialize page elements"""
+        # Username input field
         self.add_element(
             "username_input",
             AppiumBy.ID,
@@ -21,7 +21,7 @@ class LoginPage(PageObject):
             "Username Input"
         )
         
-        # 密码输入框
+        # Password input field
         self.add_element(
             "password_input",
             AppiumBy.ID,
@@ -29,7 +29,7 @@ class LoginPage(PageObject):
             "Password Input"
         )
         
-        # 登录按钮
+        # Login button
         self.add_element(
             "login_button",
             AppiumBy.ID,
@@ -37,7 +37,7 @@ class LoginPage(PageObject):
             "Login Button"
         )
         
-        # 忘记密码链接
+        # Forgot password link
         self.add_element(
             "forgot_password_link",
             AppiumBy.ID,
@@ -45,7 +45,7 @@ class LoginPage(PageObject):
             "Forgot Password Link"
         )
         
-        # 错误消息
+        # Error message
         self.add_element(
             "error_message",
             AppiumBy.ID,
@@ -53,7 +53,7 @@ class LoginPage(PageObject):
             "Error Message"
         )
         
-        # 记住我复选框
+        # Remember me checkbox
         self.add_element(
             "remember_me_checkbox",
             AppiumBy.ID,
@@ -62,14 +62,14 @@ class LoginPage(PageObject):
         )
     
     def wait_for_page_load(self, timeout=None):
-        """等待页面加载完成"""
+        """Wait for page to load completely"""
         Log.info("Waiting for login page to load...")
         self.wait_for_element("username_input", timeout)
         self.wait_for_element("password_input", timeout)
         self.wait_for_element("login_button", timeout)
     
     def is_page_loaded(self) -> bool:
-        """检查页面是否加载完成"""
+        """Check if page is loaded completely"""
         try:
             return (self.is_element_displayed("username_input") and
                     self.is_element_displayed("password_input") and
@@ -79,55 +79,55 @@ class LoginPage(PageObject):
     
     def login(self, username: str, password: str):
         """
-        执行登录操作
+        Perform login operation
         
         Args:
-            username: 用户名
-            password: 密码
+            username: Username
+            password: Password
         """
         Log.info(f"Attempting to login with username: {username}")
         
-        # 输入用户名
+        # Enter username
         self.input_text("username_input", username)
         
-        # 输入密码
+        # Enter password
         self.input_text("password_input", password)
         
-        # 点击登录按钮
+        # Click login button
         self.click_element("login_button")
         
         Log.info("Login attempt completed")
     
     def login_with_remember_me(self, username: str, password: str):
         """
-        执行登录操作（记住我）
+        Perform login operation (remember me)
         
         Args:
-            username: 用户名
-            password: 密码
+            username: Username
+            password: Password
         """
         Log.info(f"Attempting to login with remember me: {username}")
         
-        # 输入用户名
+        # Enter username
         self.input_text("username_input", username)
         
-        # 输入密码
+        # Enter password
         self.input_text("password_input", password)
         
-        # 勾选记住我
+        # Check remember me
         self.click_element("remember_me_checkbox")
         
-        # 点击登录按钮
+        # Click login button
         self.click_element("login_button")
         
         Log.info("Login with remember me attempt completed")
     
     def get_error_message(self) -> str:
         """
-        获取错误消息
+        Get error message
         
         Returns:
-            str: 错误消息
+            str: Error message
         """
         try:
             return self.get_element_text("error_message")
@@ -136,10 +136,10 @@ class LoginPage(PageObject):
     
     def is_error_displayed(self) -> bool:
         """
-        检查是否显示错误消息
+        Check if error message is displayed
         
         Returns:
-            bool: 是否显示错误
+            bool: Whether error is displayed
         """
         try:
             return self.is_element_displayed("error_message")
@@ -147,28 +147,28 @@ class LoginPage(PageObject):
             return False
     
     def click_forgot_password(self):
-        """点击忘记密码链接"""
+        """Click forgot password link"""
         Log.info("Clicking forgot password link")
         self.click_element("forgot_password_link")
     
     def clear_credentials(self):
-        """清除输入的用户名和密码"""
+        """Clear entered username and password"""
         Log.info("Clearing login credentials")
         
-        # 清除用户名
+        # Clear username
         username_element = self.get_element("username_input")
         username_element.find().clear()
         
-        # 清除密码
+        # Clear password
         password_element = self.get_element("password_input")
         password_element.find().clear()
     
     def is_remember_me_checked(self) -> bool:
         """
-        检查记住我是否被勾选
+        Check if remember me is checked
         
         Returns:
-            bool: 是否被勾选
+            bool: Whether checked
         """
         try:
             element = self.get_element("remember_me_checkbox")
@@ -177,16 +177,16 @@ class LoginPage(PageObject):
             return False
     
     def toggle_remember_me(self):
-        """切换记住我状态"""
+        """Toggle remember me state"""
         Log.info("Toggling remember me checkbox")
         self.click_element("remember_me_checkbox")
     
     def get_username_placeholder(self) -> str:
         """
-        获取用户名输入框的占位符文本
+        Get username input field placeholder text
         
         Returns:
-            str: 占位符文本
+            str: Placeholder text
         """
         try:
             element = self.get_element("username_input")
@@ -196,10 +196,10 @@ class LoginPage(PageObject):
     
     def get_password_placeholder(self) -> str:
         """
-        获取密码输入框的占位符文本
+        Get password input field placeholder text
         
         Returns:
-            str: 占位符文本
+            str: Placeholder text
         """
         try:
             element = self.get_element("password_input")

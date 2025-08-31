@@ -1,6 +1,6 @@
 """
 File Utilities
-文件工具类，提供文件操作相关功能
+File utility class, providing file operation related functionality
 """
 
 import os
@@ -15,18 +15,18 @@ from .logger import Log
 
 
 class FileUtils:
-    """文件工具类"""
+    """File utility class"""
     
     @staticmethod
     def ensure_dir(directory: str) -> str:
         """
-        确保目录存在，如果不存在则创建
+        Ensure directory exists, create if not exists
         
         Args:
-            directory: 目录路径
+            directory: Directory path
             
         Returns:
-            str: 目录路径
+            str: Directory path
         """
         Path(directory).mkdir(parents=True, exist_ok=True)
         return directory
@@ -34,13 +34,13 @@ class FileUtils:
     @staticmethod
     def read_json(filepath: str) -> Dict[str, Any]:
         """
-        读取JSON文件
+        Read JSON file
         
         Args:
-            filepath: 文件路径
+            filepath: File path
             
         Returns:
-            Dict[str, Any]: JSON数据
+            Dict[str, Any]: JSON data
         """
         try:
             with open(filepath, 'r', encoding='utf-8') as f:
@@ -54,15 +54,15 @@ class FileUtils:
     @staticmethod
     def write_json(filepath: str, data: Dict[str, Any], indent: int = 2):
         """
-        写入JSON文件
+        Write JSON file
         
         Args:
-            filepath: 文件路径
-            data: 要写入的数据
-            indent: 缩进空格数
+            filepath: File path
+            data: Data to write
+            indent: Indentation spaces
         """
         try:
-            # 确保目录存在
+            # Ensure directory exists
             FileUtils.ensure_dir(os.path.dirname(filepath))
             
             with open(filepath, 'w', encoding='utf-8') as f:
@@ -75,13 +75,13 @@ class FileUtils:
     @staticmethod
     def read_yaml(filepath: str) -> Dict[str, Any]:
         """
-        读取YAML文件
+        Read YAML file
         
         Args:
-            filepath: 文件路径
+            filepath: File path
             
         Returns:
-            Dict[str, Any]: YAML数据
+            Dict[str, Any]: YAML data
         """
         try:
             with open(filepath, 'r', encoding='utf-8') as f:
@@ -95,14 +95,14 @@ class FileUtils:
     @staticmethod
     def write_yaml(filepath: str, data: Dict[str, Any]):
         """
-        写入YAML文件
+        Write YAML file
         
         Args:
-            filepath: 文件路径
-            data: 要写入的数据
+            filepath: File path
+            data: Data to write
         """
         try:
-            # 确保目录存在
+            # Ensure directory exists
             FileUtils.ensure_dir(os.path.dirname(filepath))
             
             with open(filepath, 'w', encoding='utf-8') as f:
@@ -115,13 +115,13 @@ class FileUtils:
     @staticmethod
     def read_text(filepath: str) -> str:
         """
-        读取文本文件
+        Read text file
         
         Args:
-            filepath: 文件路径
+            filepath: File path
             
         Returns:
-            str: 文件内容
+            str: File content
         """
         try:
             with open(filepath, 'r', encoding='utf-8') as f:
@@ -135,14 +135,14 @@ class FileUtils:
     @staticmethod
     def write_text(filepath: str, content: str):
         """
-        写入文本文件
+        Write text file
         
         Args:
-            filepath: 文件路径
-            content: 要写入的内容
+            filepath: File path
+            content: Content to write
         """
         try:
-            # 确保目录存在
+            # Ensure directory exists
             FileUtils.ensure_dir(os.path.dirname(filepath))
             
             with open(filepath, 'w', encoding='utf-8') as f:
@@ -155,14 +155,14 @@ class FileUtils:
     @staticmethod
     def copy_file(src: str, dst: str):
         """
-        复制文件
+        Copy file
         
         Args:
-            src: 源文件路径
-            dst: 目标文件路径
+            src: Source file path
+            dst: Destination file path
         """
         try:
-            # 确保目标目录存在
+            # Ensure destination directory exists
             FileUtils.ensure_dir(os.path.dirname(dst))
             
             shutil.copy2(src, dst)
@@ -174,14 +174,14 @@ class FileUtils:
     @staticmethod
     def move_file(src: str, dst: str):
         """
-        移动文件
+        Move file
         
         Args:
-            src: 源文件路径
-            dst: 目标文件路径
+            src: Source file path
+            dst: Destination file path
         """
         try:
-            # 确保目标目录存在
+            # Ensure destination directory exists
             FileUtils.ensure_dir(os.path.dirname(dst))
             
             shutil.move(src, dst)
@@ -193,10 +193,10 @@ class FileUtils:
     @staticmethod
     def delete_file(filepath: str):
         """
-        删除文件
+        Delete file
         
         Args:
-            filepath: 文件路径
+            filepath: File path
         """
         try:
             if os.path.exists(filepath):
@@ -211,14 +211,14 @@ class FileUtils:
     @staticmethod
     def list_files(directory: str, pattern: str = "*") -> List[str]:
         """
-        列出目录中的文件
+        List files in directory
         
         Args:
-            directory: 目录路径
-            pattern: 文件匹配模式
+            directory: Directory path
+            pattern: File matching pattern
             
         Returns:
-            List[str]: 文件路径列表
+            List[str]: List of file paths
         """
         try:
             files = []
@@ -234,26 +234,26 @@ class FileUtils:
     @staticmethod
     def file_exists(filepath: str) -> bool:
         """
-        检查文件是否存在
+        Check if file exists
         
         Args:
-            filepath: 文件路径
+            filepath: File path
             
         Returns:
-            bool: 文件是否存在
+            bool: Whether file exists
         """
         return os.path.exists(filepath)
     
     @staticmethod
     def get_file_size(filepath: str) -> int:
         """
-        获取文件大小
+        Get file size
         
         Args:
-            filepath: 文件路径
+            filepath: File path
             
         Returns:
-            int: 文件大小（字节）
+            int: File size (bytes)
         """
         try:
             return os.path.getsize(filepath)
@@ -264,13 +264,13 @@ class FileUtils:
     @staticmethod
     def get_file_modified_time(filepath: str) -> datetime:
         """
-        获取文件修改时间
+        Get file modified time
         
         Args:
-            filepath: 文件路径
+            filepath: File path
             
         Returns:
-            datetime: 修改时间
+            datetime: Modified time
         """
         try:
             timestamp = os.path.getmtime(filepath)
@@ -282,29 +282,29 @@ class FileUtils:
     @staticmethod
     def create_backup(filepath: str, backup_dir: str = "backups") -> str:
         """
-        创建文件备份
+        Create file backup
         
         Args:
-            filepath: 原文件路径
-            backup_dir: 备份目录
+            filepath: Original file path
+            backup_dir: Backup directory
             
         Returns:
-            str: 备份文件路径
+            str: Backup file path
         """
         try:
             if not FileUtils.file_exists(filepath):
                 raise FileNotFoundError(f"File not found: {filepath}")
             
-            # 创建备份目录
+            # Create backup directory
             FileUtils.ensure_dir(backup_dir)
             
-            # 生成备份文件名
+            # Generate backup filename
             filename = os.path.basename(filepath)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             backup_filename = f"{timestamp}_{filename}"
             backup_path = os.path.join(backup_dir, backup_filename)
             
-            # 复制文件
+            # Copy file
             FileUtils.copy_file(filepath, backup_path)
             
             Log.info(f"Created backup: {backup_path}")

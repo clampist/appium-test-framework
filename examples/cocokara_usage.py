@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Cocokara App Usage Example
-Cocokara应用使用示例
+Cocokara app usage example
 """
 
 from core.driver.appium_driver import AppiumDriver
@@ -14,10 +14,10 @@ from tests.jp.co.matsukiyococokara.app.datas.test_data import CocokaraTestData
 
 
 def main():
-    """Cocokara应用使用示例"""
+    """Cocokara app usage example"""
     Log.info("Starting Cocokara app usage example")
     
-    # 创建Appium配置
+    # Create Appium configuration
     config = AppiumConfig(
         server_url="http://127.0.0.1:4723",
         platform_name="Android",
@@ -36,59 +36,59 @@ def main():
         }
     )
     
-    # 验证配置
+    # Validate configuration
     if not config.validate():
         Log.error("Invalid Appium configuration")
         return
     
-    # 创建驱动
+    # Create driver
     driver = AppiumDriver(config)
     
     try:
-        # 启动驱动
+        # Start driver
         driver.start_driver()
         Log.info("Driver started successfully")
         
-        # 创建页面对象
+        # Create page objects
         main_page = MainPage(driver)
         challenge_page = ChallengePage(driver)
         result_page = ResultPage(driver)
         
-        # 启动应用
+        # Activate app
         driver.activate_app(CocokaraTestData.APP_PACKAGE)
         Log.info("App activated")
         
-        # 等待主页面加载
+        # Wait for main page to load
         main_page.wait_for_page_load()
         Log.info("Main page loaded")
         
-        # 处理弹窗
+        # Handle popup
         main_page.wait_for_popup()
         main_page.close_popup()
         Log.info("Popup handled")
         
-        # 点击挑战区域
+        # Tap challenge area
         main_page.tap_challenge_area()
         Log.info("Challenge area tapped")
         
-        # 开始挑战
+        # Start challenge
         challenge_page.start_challenge()
         Log.info("Challenge started")
         
-        # 检查结果
+        # Check result
         result_page.wait_for_page_load()
         result_type = result_page.check_result()
         Log.info(f"Challenge result: {result_type}")
         
-        # 处理结果
+        # Handle result
         result_page.handle_result()
         Log.info("Result handled")
         
-        # 截图
+        # Take screenshot
         driver.take_screenshot("cocokara_example")
         Log.info("Screenshot taken")
         
-        # 关闭弹窗
+        # Close popup
         main_page.close_imageview_popup()
         Log.info("Popup closed")
         
@@ -98,14 +98,14 @@ def main():
         Log.error(f"Cocokara app usage example failed: {str(e)}")
         
     finally:
-        # 关闭应用
+        # Terminate app
         try:
             driver.terminate_app(CocokaraTestData.APP_PACKAGE)
             Log.info("App terminated")
         except Exception as e:
             Log.warning(f"Failed to terminate app: {str(e)}")
         
-        # 关闭驱动
+        # Close driver
         driver.quit_driver()
         Log.info("Driver closed")
 

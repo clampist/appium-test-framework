@@ -1,6 +1,6 @@
 """
 Library Page Object for Monoxer App
-Monoxer应用Library页面对象
+Library page object for Monoxer App
 """
 
 import time
@@ -14,26 +14,27 @@ from datas.test_data import MonoxerTestData
 
 
 class LibraryPage(PageObject):
-    """Monoxer应用Library页面对象"""
+    """Library page object for Monoxer App"""
     
-    def __init__(self, driver):
+    def __init__(self, driver, test_data=None):
         super().__init__(driver)
-        self.wait = WebDriverWait(driver, MonoxerTestData.WAIT_TIME)
+        self.test_data = test_data or MonoxerTestData
+        self.wait = WebDriverWait(driver, self.test_data.WAIT_TIME)
     
     def click_library_tab(self) -> bool:
         """
-        点击Library标签
+        Click Library tab
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             library_tab = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ID, MonoxerTestData.Locators.LIBRARY_TAB)
+                (AppiumBy.ID, self.test_data.Locators.LIBRARY_TAB)
             ))
             library_tab.click()
             Log.info("Clicked library tab")
-            time.sleep(2)  # 等待Library页面加载
+            time.sleep(2)  # Wait for Library page to load
             return True
         except Exception as e:
             Log.error(f"Failed to click library tab: {str(e)}")
@@ -41,18 +42,18 @@ class LibraryPage(PageObject):
     
     def click_my_books_tab(self) -> bool:
         """
-        点击My Books标签
+        Click My Books tab
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             my_books_tab = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ACCESSIBILITY_ID, MonoxerTestData.Locators.MY_BOOKS_TAB)
+                (AppiumBy.ACCESSIBILITY_ID, self.test_data.Locators.MY_BOOKS_TAB)
             ))
             my_books_tab.click()
             Log.info("Clicked 'My Books' tab")
-            time.sleep(2)  # 等待My Books内容加载
+            time.sleep(2)  # Wait for My Books content to load
             return True
         except Exception as e:
             Log.error(f"My Books tab not found: {str(e)}")
@@ -60,18 +61,18 @@ class LibraryPage(PageObject):
     
     def click_auto_test_title(self) -> bool:
         """
-        点击auto_test标题
+        Click auto_test title
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             auto_test_title = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.XPATH, MonoxerTestData.Locators.AUTO_TEST_TITLE)
+                (AppiumBy.XPATH, self.test_data.Locators.AUTO_TEST_TITLE)
             ))
             auto_test_title.click()
             Log.info("Clicked 'auto_test' title")
-            time.sleep(2)  # 等待页面加载
+            time.sleep(2)  # Wait for page to load
             return True
         except Exception as e:
             Log.error(f"Failed to click auto_test title: {str(e)}")
@@ -79,18 +80,18 @@ class LibraryPage(PageObject):
     
     def click_open_deck_button(self) -> bool:
         """
-        点击open_deck按钮
+        Click open_deck button
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             open_deck_btn = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ID, MonoxerTestData.Locators.OPEN_DECK_BTN)
+                (AppiumBy.ID, self.test_data.Locators.OPEN_DECK_BTN)
             ))
             open_deck_btn.click()
             Log.info("Clicked 'Open Deck' button")
-            time.sleep(2)  # 等待deck打开
+            time.sleep(2)  # Wait for deck to open
             return True
         except Exception as e:
             Log.error(f"Failed to click open_deck button: {str(e)}")
@@ -98,41 +99,41 @@ class LibraryPage(PageObject):
     
     def click_start_test_button(self) -> bool:
         """
-        点击start_test按钮
+        Click start_test button
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
-            # 尝试多种方法找到start_test按钮
+            # Try multiple methods to find start_test button
             start_test_btn = None
             
             try:
-                # 方法1: 尝试精确ID
+                # Method 1: Try exact ID
                 start_test_btn = self.wait.until(EC.element_to_be_clickable(
-                    (AppiumBy.ID, MonoxerTestData.Locators.START_TEST_BTN)
+                    (AppiumBy.ID, self.test_data.Locators.START_TEST_BTN)
                 ))
                 Log.info("Found start_test button with ID")
             except:
                 try:
-                    # 方法2: 尝试类名
+                    # Method 2: Try class name
                     start_test_btn = self.driver.find_element(AppiumBy.CLASS_NAME, "android.widget.Button")
                     Log.info("Found start_test button with class name")
                 except:
                     try:
-                        # 方法3: 尝试UiAutomator
+                        # Method 3: Try UiAutomator
                         start_test_btn = self.driver.find_element(AppiumBy.ANDROID_UIAUTOMATOR, 
                             'new UiSelector().resourceId("com.monoxer:id/start_test")')
                         Log.info("Found start_test button with UiAutomator")
                     except:
                         try:
-                            # 方法4: 尝试XPath
+                            # Method 4: Try XPath
                             start_test_btn = self.driver.find_element(AppiumBy.XPATH, 
                                 '//android.widget.Button[@resource-id="com.monoxer:id/start_test"]')
                             Log.info("Found start_test button with XPath")
                         except:
                             try:
-                                # 方法5: 尝试文本内容
+                                # Method 5: Try text content
                                 start_test_btn = self.driver.find_element(AppiumBy.XPATH, "//*[@text='STUDY']")
                                 Log.info("Found start_test button with text 'STUDY'")
                             except:
@@ -142,7 +143,7 @@ class LibraryPage(PageObject):
             if start_test_btn:
                 start_test_btn.click()
                 Log.info("Clicked 'Start Test' button")
-                time.sleep(3)  # 等待STUDY页面加载
+                time.sleep(3)  # Wait for STUDY page to load
                 return True
             else:
                 return False
@@ -153,19 +154,19 @@ class LibraryPage(PageObject):
     
     def answer_study_question(self, question_number: int = 1) -> bool:
         """
-        回答STUDY问题
+        Answer STUDY question
         
         Args:
-            question_number: 问题编号
+            question_number: Question number
             
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
-            # 尝试找到choice1_text（选择题）
+            # Try to find choice1_text (multiple choice)
             try:
                 choice1 = self.wait.until(EC.element_to_be_clickable(
-                    (AppiumBy.ID, MonoxerTestData.Locators.CHOICE1_TEXT)
+                    (AppiumBy.ID, self.test_data.Locators.CHOICE1_TEXT)
                 ))
                 choice1.click()
                 Log.info(f"Clicked first choice for question {question_number} (multiple choice)")
@@ -175,18 +176,18 @@ class LibraryPage(PageObject):
             except Exception as choice_error:
                 Log.info(f"No multiple choice found for question {question_number}, trying fill-in-the-blank...")
                 
-                # 尝试点击虚拟键盘上的Done按钮（填空题）
+                # Try to click Done button on virtual keyboard (fill-in-the-blank)
                 try:
                     done_btn = self.wait.until(EC.element_to_be_clickable(
-                        (AppiumBy.ANDROID_UIAUTOMATOR, MonoxerTestData.Locators.DONE_BTN)
+                        (AppiumBy.ANDROID_UIAUTOMATOR, self.test_data.Locators.DONE_BTN)
                     ))
                     done_btn.click()
                     Log.info(f"Clicked 'Done' button for question {question_number} (fill-in-the-blank)")
                     
                 except Exception as done_error:
                     try:
-                        # 替代XPath方法
-                        done_btn = self.driver.find_element(AppiumBy.XPATH, MonoxerTestData.Locators.DONE_BTN_XPATH)
+                        # Alternative XPath method
+                        done_btn = self.driver.find_element(AppiumBy.XPATH, self.test_data.Locators.DONE_BTN_XPATH)
                         done_btn.click()
                         Log.info(f"Clicked 'Done' button for question {question_number} (fill-in-the-blank) - XPath")
                         
@@ -203,18 +204,18 @@ class LibraryPage(PageObject):
     
     def click_back_from_study(self) -> bool:
         """
-        从STUDY模式点击返回按钮
+        Click back button from STUDY mode
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             back_btn = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ACCESSIBILITY_ID, MonoxerTestData.Locators.NAVIGATE_UP)
+                (AppiumBy.ACCESSIBILITY_ID, self.test_data.Locators.NAVIGATE_UP)
             ))
             back_btn.click()
             Log.info("Clicked back button from STUDY mode")
-            time.sleep(2)  # 等待返回deck页面
+            time.sleep(2)  # Wait to return to deck page
             return True
         except Exception as e:
             Log.error(f"Failed to click back button from STUDY: {str(e)}")

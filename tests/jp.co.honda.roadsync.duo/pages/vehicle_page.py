@@ -1,6 +1,6 @@
 """
 Vehicle Page Object
-车辆页面对象
+Vehicle page object
 """
 
 from appium.webdriver.common.appiumby import AppiumBy
@@ -9,11 +9,11 @@ from core.utils.logger import Log
 
 
 class VehiclePage(PageObject):
-    """车辆页面对象"""
+    """Vehicle page object"""
     
     def _init_elements(self):
-        """初始化页面元素"""
-        # 车辆名称
+        """Initialize page elements"""
+        # Vehicle name
         self.add_element(
             "vehicle_name",
             AppiumBy.ID,
@@ -21,7 +21,7 @@ class VehiclePage(PageObject):
             "Vehicle Name"
         )
         
-        # 车辆状态
+        # Vehicle status
         self.add_element(
             "vehicle_status",
             AppiumBy.ID,
@@ -29,7 +29,7 @@ class VehiclePage(PageObject):
             "Vehicle Status"
         )
         
-        # 开始行程按钮
+        # Start trip button
         self.add_element(
             "start_trip_button",
             AppiumBy.ID,
@@ -37,7 +37,7 @@ class VehiclePage(PageObject):
             "Start Trip Button"
         )
         
-        # 车辆详情按钮
+        # Vehicle details button
         self.add_element(
             "vehicle_details_button",
             AppiumBy.ID,
@@ -45,7 +45,7 @@ class VehiclePage(PageObject):
             "Vehicle Details Button"
         )
         
-        # 返回按钮
+        # Back button
         self.add_element(
             "back_button",
             AppiumBy.ID,
@@ -53,7 +53,7 @@ class VehiclePage(PageObject):
             "Back Button"
         )
         
-        # 车辆图片
+        # Vehicle image
         self.add_element(
             "vehicle_image",
             AppiumBy.ID,
@@ -61,7 +61,7 @@ class VehiclePage(PageObject):
             "Vehicle Image"
         )
         
-        # 车辆信息列表
+        # Vehicle info list
         self.add_element(
             "vehicle_info_list",
             AppiumBy.ID,
@@ -69,7 +69,7 @@ class VehiclePage(PageObject):
             "Vehicle Info List"
         )
         
-        # 编辑车辆按钮
+        # Edit vehicle button
         self.add_element(
             "edit_vehicle_button",
             AppiumBy.ID,
@@ -77,7 +77,7 @@ class VehiclePage(PageObject):
             "Edit Vehicle Button"
         )
         
-        # 删除车辆按钮
+        # Delete vehicle button
         self.add_element(
             "delete_vehicle_button",
             AppiumBy.ID,
@@ -86,14 +86,14 @@ class VehiclePage(PageObject):
         )
     
     def wait_for_page_load(self, timeout=None):
-        """等待页面加载完成"""
+        """Wait for page to load completely"""
         Log.info("Waiting for vehicle page to load...")
         self.wait_for_element("vehicle_name", timeout)
         self.wait_for_element("vehicle_status", timeout)
         self.wait_for_element("start_trip_button", timeout)
     
     def is_page_loaded(self) -> bool:
-        """检查页面是否加载完成"""
+        """Check if page is loaded completely"""
         try:
             return (self.is_element_displayed("vehicle_name") and
                     self.is_element_displayed("vehicle_status") and
@@ -103,10 +103,10 @@ class VehiclePage(PageObject):
     
     def get_vehicle_name(self) -> str:
         """
-        获取车辆名称
+        Get vehicle name
         
         Returns:
-            str: 车辆名称
+            str: Vehicle name
         """
         try:
             return self.get_element_text("vehicle_name")
@@ -115,10 +115,10 @@ class VehiclePage(PageObject):
     
     def get_vehicle_status(self) -> str:
         """
-        获取车辆状态
+        Get vehicle status
         
         Returns:
-            str: 车辆状态
+            str: Vehicle status
         """
         try:
             return self.get_element_text("vehicle_status")
@@ -126,36 +126,36 @@ class VehiclePage(PageObject):
             return ""
     
     def start_trip(self):
-        """开始行程"""
+        """Start trip"""
         Log.info("Starting trip")
         self.click_element("start_trip_button")
     
     def click_vehicle_details(self):
-        """点击车辆详情"""
+        """Click vehicle details"""
         Log.info("Clicking vehicle details")
         self.click_element("vehicle_details_button")
     
     def go_back(self):
-        """返回上一页"""
+        """Go back to previous page"""
         Log.info("Going back to previous page")
         self.click_element("back_button")
     
     def click_edit_vehicle(self):
-        """点击编辑车辆"""
+        """Click edit vehicle"""
         Log.info("Clicking edit vehicle")
         self.click_element("edit_vehicle_button")
     
     def delete_vehicle(self):
-        """删除车辆"""
+        """Delete vehicle"""
         Log.info("Deleting vehicle")
         self.click_element("delete_vehicle_button")
     
     def is_vehicle_available(self) -> bool:
         """
-        检查车辆是否可用
+        Check if vehicle is available
         
         Returns:
-            bool: 是否可用
+            bool: Whether available
         """
         try:
             status = self.get_vehicle_status().lower()
@@ -165,10 +165,10 @@ class VehiclePage(PageObject):
     
     def is_vehicle_in_use(self) -> bool:
         """
-        检查车辆是否正在使用中
+        Check if vehicle is in use
         
         Returns:
-            bool: 是否正在使用
+            bool: Whether in use
         """
         try:
             status = self.get_vehicle_status().lower()
@@ -178,10 +178,10 @@ class VehiclePage(PageObject):
     
     def is_vehicle_maintenance(self) -> bool:
         """
-        检查车辆是否在维护中
+        Check if vehicle is under maintenance
         
         Returns:
-            bool: 是否在维护
+            bool: Whether under maintenance
         """
         try:
             status = self.get_vehicle_status().lower()
@@ -191,10 +191,10 @@ class VehiclePage(PageObject):
     
     def can_start_trip(self) -> bool:
         """
-        检查是否可以开始行程
+        Check if trip can be started
         
         Returns:
-            bool: 是否可以开始行程
+            bool: Whether trip can be started
         """
         try:
             return (self.is_element_enabled("start_trip_button") and 
@@ -204,10 +204,10 @@ class VehiclePage(PageObject):
     
     def get_vehicle_info(self) -> dict:
         """
-        获取车辆信息
+        Get vehicle information
         
         Returns:
-            dict: 车辆信息
+            dict: Vehicle information
         """
         try:
             vehicle_info = {
@@ -227,9 +227,9 @@ class VehiclePage(PageObject):
     
     def take_vehicle_screenshot(self, name: str = "vehicle_page"):
         """
-        截取车辆页面截图
+        Take screenshot of vehicle page
         
         Args:
-            name: 截图名称
+            name: Screenshot name
         """
         self.take_screenshot(name)

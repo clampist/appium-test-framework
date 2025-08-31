@@ -1,6 +1,6 @@
 """
 Time Utilities
-时间工具类，提供时间相关的功能
+Time utility class, providing time-related functionality
 """
 
 import time
@@ -12,52 +12,52 @@ from .logger import Log
 
 
 class TimeUtils:
-    """时间工具类"""
+    """Time utility class"""
     
     @staticmethod
     def get_current_timestamp() -> float:
         """
-        获取当前时间戳
+        Get current timestamp
         
         Returns:
-            float: 当前时间戳
+            float: Current timestamp
         """
         return time.time()
     
     @staticmethod
     def get_current_datetime() -> datetime:
         """
-        获取当前日期时间
+        Get current datetime
         
         Returns:
-            datetime: 当前日期时间
+            datetime: Current datetime
         """
         return datetime.now()
     
     @staticmethod
     def format_datetime(dt: datetime, format_str: str = "%Y-%m-%d %H:%M:%S") -> str:
         """
-        格式化日期时间
+        Format datetime
         
         Args:
-            dt: 日期时间对象
-            format_str: 格式化字符串
+            dt: Datetime object
+            format_str: Format string
             
         Returns:
-            str: 格式化后的字符串
+            str: Formatted string
         """
         return dt.strftime(format_str)
     
     @staticmethod
     def parse_datetime(date_str: str) -> datetime:
         """
-        解析日期时间字符串
+        Parse datetime string
         
         Args:
-            date_str: 日期时间字符串
+            date_str: Datetime string
             
         Returns:
-            datetime: 日期时间对象
+            datetime: Datetime object
         """
         try:
             return parser.parse(date_str)
@@ -68,10 +68,10 @@ class TimeUtils:
     @staticmethod
     def sleep(seconds: Union[int, float]):
         """
-        睡眠指定时间
+        Sleep for specified time
         
         Args:
-            seconds: 睡眠秒数
+            seconds: Sleep seconds
         """
         time.sleep(seconds)
     
@@ -79,16 +79,16 @@ class TimeUtils:
     def wait_for_condition(condition_func, timeout: int = 30, interval: float = 0.5, 
                           condition_name: str = "condition"):
         """
-        等待条件满足
+        Wait for condition to be met
         
         Args:
-            condition_func: 条件函数，返回True表示条件满足
-            timeout: 超时时间（秒）
-            interval: 检查间隔（秒）
-            condition_name: 条件名称（用于日志）
+            condition_func: Condition function, returns True when condition is met
+            timeout: Timeout (seconds)
+            interval: Check interval (seconds)
+            condition_name: Condition name (for logging)
             
         Returns:
-            bool: 条件是否满足
+            bool: Whether condition is met
         """
         start_time = TimeUtils.get_current_timestamp()
         end_time = start_time + timeout
@@ -112,14 +112,14 @@ class TimeUtils:
     def get_time_difference(start_time: Union[datetime, float], 
                            end_time: Optional[Union[datetime, float]] = None) -> float:
         """
-        计算时间差
+        Calculate time difference
         
         Args:
-            start_time: 开始时间
-            end_time: 结束时间（可选，默认为当前时间）
+            start_time: Start time
+            end_time: End time (optional, defaults to current time)
             
         Returns:
-            float: 时间差（秒）
+            float: Time difference (seconds)
         """
         if end_time is None:
             end_time = TimeUtils.get_current_timestamp()
@@ -135,13 +135,13 @@ class TimeUtils:
     @staticmethod
     def format_duration(seconds: float) -> str:
         """
-        格式化持续时间
+        Format duration
         
         Args:
-            seconds: 秒数
+            seconds: Seconds
             
         Returns:
-            str: 格式化后的持续时间
+            str: Formatted duration
         """
         if seconds < 60:
             return f"{seconds:.2f}s"
@@ -155,93 +155,93 @@ class TimeUtils:
     @staticmethod
     def add_time(dt: datetime, **kwargs) -> datetime:
         """
-        给日期时间添加时间
+        Add time to datetime
         
         Args:
-            dt: 原始日期时间
-            **kwargs: 要添加的时间参数（days, hours, minutes, seconds等）
+            dt: Original datetime
+            **kwargs: Time parameters to add (days, hours, minutes, seconds, etc.)
             
         Returns:
-            datetime: 新的日期时间
+            datetime: New datetime
         """
         return dt + timedelta(**kwargs)
     
     @staticmethod
     def subtract_time(dt: datetime, **kwargs) -> datetime:
         """
-        从日期时间减去时间
+        Subtract time from datetime
         
         Args:
-            dt: 原始日期时间
-            **kwargs: 要减去的时间参数（days, hours, minutes, seconds等）
+            dt: Original datetime
+            **kwargs: Time parameters to subtract (days, hours, minutes, seconds, etc.)
             
         Returns:
-            datetime: 新的日期时间
+            datetime: New datetime
         """
         return dt - timedelta(**kwargs)
     
     @staticmethod
     def is_weekend(dt: datetime) -> bool:
         """
-        检查是否为周末
+        Check if it's weekend
         
         Args:
-            dt: 日期时间
+            dt: Datetime
             
         Returns:
-            bool: 是否为周末
+            bool: Whether it's weekend
         """
         return dt.weekday() >= 5
     
     @staticmethod
     def is_workday(dt: datetime) -> bool:
         """
-        检查是否为工作日
+        Check if it's workday
         
         Args:
-            dt: 日期时间
+            dt: Datetime
             
         Returns:
-            bool: 是否为工作日
+            bool: Whether it's workday
         """
         return dt.weekday() < 5
     
     @staticmethod
     def get_start_of_day(dt: datetime) -> datetime:
         """
-        获取一天的开始时间（00:00:00）
+        Get start of day (00:00:00)
         
         Args:
-            dt: 日期时间
+            dt: Datetime
             
         Returns:
-            datetime: 一天的开始时间
+            datetime: Start of day
         """
         return dt.replace(hour=0, minute=0, second=0, microsecond=0)
     
     @staticmethod
     def get_end_of_day(dt: datetime) -> datetime:
         """
-        获取一天的结束时间（23:59:59）
+        Get end of day (23:59:59)
         
         Args:
-            dt: 日期时间
+            dt: Datetime
             
         Returns:
-            datetime: 一天的结束时间
+            datetime: End of day
         """
         return dt.replace(hour=23, minute=59, second=59, microsecond=999999)
     
     @staticmethod
     def get_start_of_week(dt: datetime) -> datetime:
         """
-        获取一周的开始时间（周一00:00:00）
+        Get start of week (Monday 00:00:00)
         
         Args:
-            dt: 日期时间
+            dt: Datetime
             
         Returns:
-            datetime: 一周的开始时间
+            datetime: Start of week
         """
         days_since_monday = dt.weekday()
         return TimeUtils.get_start_of_day(dt - timedelta(days=days_since_monday))
@@ -249,13 +249,13 @@ class TimeUtils:
     @staticmethod
     def get_end_of_week(dt: datetime) -> datetime:
         """
-        获取一周的结束时间（周日23:59:59）
+        Get end of week (Sunday 23:59:59)
         
         Args:
-            dt: 日期时间
+            dt: Datetime
             
         Returns:
-            datetime: 一周的结束时间
+            datetime: End of week
         """
         days_until_sunday = 6 - dt.weekday()
         return TimeUtils.get_end_of_day(dt + timedelta(days=days_until_sunday))
@@ -263,28 +263,28 @@ class TimeUtils:
     @staticmethod
     def get_start_of_month(dt: datetime) -> datetime:
         """
-        获取一个月的开始时间
+        Get start of month
         
         Args:
-            dt: 日期时间
+            dt: Datetime
             
         Returns:
-            datetime: 一个月的开始时间
+            datetime: Start of month
         """
         return dt.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     
     @staticmethod
     def get_end_of_month(dt: datetime) -> datetime:
         """
-        获取一个月的结束时间
+        Get end of month
         
         Args:
-            dt: 日期时间
+            dt: Datetime
             
         Returns:
-            datetime: 一个月的结束时间
+            datetime: End of month
         """
-        # 获取下个月的第一天，然后减去1天
+        # Get first day of next month, then subtract 1 day
         if dt.month == 12:
             next_month = dt.replace(year=dt.year + 1, month=1, day=1)
         else:
@@ -295,28 +295,28 @@ class TimeUtils:
     @staticmethod
     def is_same_day(dt1: datetime, dt2: datetime) -> bool:
         """
-        检查两个日期是否为同一天
+        Check if two dates are the same day
         
         Args:
-            dt1: 第一个日期时间
-            dt2: 第二个日期时间
+            dt1: First datetime
+            dt2: Second datetime
             
         Returns:
-            bool: 是否为同一天
+            bool: Whether same day
         """
         return dt1.date() == dt2.date()
     
     @staticmethod
     def is_same_week(dt1: datetime, dt2: datetime) -> bool:
         """
-        检查两个日期是否为同一周
+        Check if two dates are the same week
         
         Args:
-            dt1: 第一个日期时间
-            dt2: 第二个日期时间
+            dt1: First datetime
+            dt2: Second datetime
             
         Returns:
-            bool: 是否为同一周
+            bool: Whether same week
         """
         start1 = TimeUtils.get_start_of_week(dt1)
         start2 = TimeUtils.get_start_of_week(dt2)
@@ -325,13 +325,13 @@ class TimeUtils:
     @staticmethod
     def is_same_month(dt1: datetime, dt2: datetime) -> bool:
         """
-        检查两个日期是否为同一月
+        Check if two dates are the same month
         
         Args:
-            dt1: 第一个日期时间
-            dt2: 第二个日期时间
+            dt1: First datetime
+            dt2: Second datetime
             
         Returns:
-            bool: 是否为同一月
+            bool: Whether same month
         """
         return dt1.year == dt2.year and dt1.month == dt2.month

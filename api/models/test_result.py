@@ -1,6 +1,6 @@
 """
 Test Result Model
-测试结果数据模型
+Test result data model
 """
 
 from typing import Dict, Any, List, Optional
@@ -12,56 +12,56 @@ from core.utils.logger import Log
 
 @dataclass
 class TestResult:
-    """测试结果数据模型"""
+    """Test result data model"""
     
-    # 基本信息
+    # Basic information
     id: str = ""
     test_case_id: str = ""
     test_run_id: str = ""
     
-    # 执行结果
+    # Execution result
     status: str = "pending"  # pending, running, passed, failed, skipped, blocked
-    execution_time: float = 0.0  # 执行时间（秒）
+    execution_time: float = 0.0  # Execution time (seconds)
     
-    # 错误信息
+    # Error information
     error_message: str = ""
     error_type: str = ""
     stack_trace: str = ""
     
-    # 截图和日志
+    # Screenshots and logs
     screenshot_path: str = ""
     log_path: str = ""
     video_path: str = ""
     
-    # 环境信息
+    # Environment information
     device_info: Dict[str, Any] = field(default_factory=dict)
     app_info: Dict[str, Any] = field(default_factory=dict)
     platform_info: Dict[str, Any] = field(default_factory=dict)
     
-    # 执行环境
+    # Execution environment
     executed_by: str = ""
     executed_on: str = ""
     environment: str = ""
     
-    # 时间信息
+    # Time information
     started_at: Optional[datetime] = None
     finished_at: Optional[datetime] = None
     created_at: Optional[datetime] = None
     
-    # 其他信息
+    # Other information
     additional_data: Dict[str, Any] = field(default_factory=dict)
     
     def __post_init__(self):
-        """初始化后处理"""
+        """Post-initialization processing"""
         if self.created_at is None:
             self.created_at = datetime.now()
     
     def to_dict(self) -> Dict[str, Any]:
         """
-        转换为字典
+        Convert to dictionary
         
         Returns:
-            Dict[str, Any]: 字典表示
+            Dict[str, Any]: Dictionary representation
         """
         return {
             'id': self.id,
@@ -90,15 +90,15 @@ class TestResult:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'TestResult':
         """
-        从字典创建对象
+        Create object from dictionary
         
         Args:
-            data: 字典数据
+            data: Dictionary data
             
         Returns:
-            TestResult: 测试结果对象
+            TestResult: Test result object
         """
-        # 处理时间字段
+        # Handle time fields
         started_at = None
         if data.get('started_at'):
             try:
@@ -145,18 +145,18 @@ class TestResult:
         )
     
     def start_execution(self):
-        """开始执行测试"""
+        """Start test execution"""
         self.status = "running"
         self.started_at = datetime.now()
         Log.info(f"Started execution of test result: {self.id}")
     
     def finish_execution(self, status: str, execution_time: float = None):
         """
-        完成测试执行
+        Finish test execution
         
         Args:
-            status: 执行状态
-            execution_time: 执行时间（秒）
+            status: Execution status
+            execution_time: Execution time (seconds)
         """
         valid_statuses = ['passed', 'failed', 'skipped', 'blocked']
         if status not in valid_statuses:
@@ -174,12 +174,12 @@ class TestResult:
     
     def set_error(self, error_message: str, error_type: str = "", stack_trace: str = ""):
         """
-        设置错误信息
+        Set error information
         
         Args:
-            error_message: 错误消息
-            error_type: 错误类型
-            stack_trace: 堆栈跟踪
+            error_message: Error message
+            error_type: Error type
+            stack_trace: Stack trace
         """
         self.error_message = error_message
         self.error_type = error_type
@@ -189,115 +189,115 @@ class TestResult:
     
     def add_screenshot(self, screenshot_path: str):
         """
-        添加截图路径
+        Add screenshot path
         
         Args:
-            screenshot_path: 截图文件路径
+            screenshot_path: Screenshot file path
         """
         self.screenshot_path = screenshot_path
         Log.info(f"Added screenshot for test result {self.id}: {screenshot_path}")
     
     def add_log(self, log_path: str):
         """
-        添加日志路径
+        Add log path
         
         Args:
-            log_path: 日志文件路径
+            log_path: Log file path
         """
         self.log_path = log_path
         Log.info(f"Added log for test result {self.id}: {log_path}")
     
     def add_video(self, video_path: str):
         """
-        添加视频路径
+        Add video path
         
         Args:
-            video_path: 视频文件路径
+            video_path: Video file path
         """
         self.video_path = video_path
         Log.info(f"Added video for test result {self.id}: {video_path}")
     
     def set_device_info(self, device_info: Dict[str, Any]):
         """
-        设置设备信息
+        Set device information
         
         Args:
-            device_info: 设备信息字典
+            device_info: Device information dictionary
         """
         self.device_info = device_info
         Log.info(f"Set device info for test result {self.id}")
     
     def set_app_info(self, app_info: Dict[str, Any]):
         """
-        设置应用信息
+        Set application information
         
         Args:
-            app_info: 应用信息字典
+            app_info: Application information dictionary
         """
         self.app_info = app_info
         Log.info(f"Set app info for test result {self.id}")
     
     def set_platform_info(self, platform_info: Dict[str, Any]):
         """
-        设置平台信息
+        Set platform information
         
         Args:
-            platform_info: 平台信息字典
+            platform_info: Platform information dictionary
         """
         self.platform_info = platform_info
         Log.info(f"Set platform info for test result {self.id}")
     
     def is_passed(self) -> bool:
         """
-        检查是否通过
+        Check if passed
         
         Returns:
-            bool: 是否通过
+            bool: Whether passed
         """
         return self.status == "passed"
     
     def is_failed(self) -> bool:
         """
-        检查是否失败
+        Check if failed
         
         Returns:
-            bool: 是否失败
+            bool: Whether failed
         """
         return self.status == "failed"
     
     def is_skipped(self) -> bool:
         """
-        检查是否跳过
+        Check if skipped
         
         Returns:
-            bool: 是否跳过
+            bool: Whether skipped
         """
         return self.status == "skipped"
     
     def is_blocked(self) -> bool:
         """
-        检查是否阻塞
+        Check if blocked
         
         Returns:
-            bool: 是否阻塞
+            bool: Whether blocked
         """
         return self.status == "blocked"
     
     def is_running(self) -> bool:
         """
-        检查是否正在运行
+        Check if running
         
         Returns:
-            bool: 是否正在运行
+            bool: Whether running
         """
         return self.status == "running"
     
     def get_execution_duration(self) -> float:
         """
-        获取执行持续时间
+        Get execution duration
         
         Returns:
-            float: 执行时间（秒）
+            float: Execution time (seconds)
         """
         if self.started_at and self.finished_at:
             return (self.finished_at - self.started_at).total_seconds()
@@ -305,10 +305,10 @@ class TestResult:
     
     def get_summary(self) -> str:
         """
-        获取测试结果摘要
+        Get test result summary
         
         Returns:
-            str: 摘要信息
+            str: Summary information
         """
         parts = [f"Test {self.test_case_id}"]
         
@@ -325,10 +325,10 @@ class TestResult:
     
     def validate(self) -> bool:
         """
-        验证测试结果数据
+        Validate test result data
         
         Returns:
-            bool: 是否有效
+            bool: Whether valid
         """
         errors = []
         

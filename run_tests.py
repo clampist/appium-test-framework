@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Test Runner Script
-测试运行脚本
+Test runner script
 """
 
 import os
@@ -14,7 +14,7 @@ from core.utils.file_utils import FileUtils
 
 
 def run_command(command, description):
-    """运行命令"""
+    """Run command"""
     Log.info(f"Running: {description}")
     Log.info(f"Command: {command}")
     
@@ -35,10 +35,10 @@ def run_command(command, description):
 
 
 def setup_environment():
-    """设置测试环境"""
+    """Setup test environment"""
     Log.info("Setting up test environment...")
     
-    # 创建必要的目录
+    # Create necessary directories
     directories = [
         "logs",
         "reports", 
@@ -53,43 +53,43 @@ def setup_environment():
 
 
 def run_tests(test_path=None, markers=None, parallel=None, html_report=True):
-    """运行测试"""
+    """Run tests"""
     Log.info("Starting test execution...")
     
-    # 构建pytest命令
+    # Build pytest command
     cmd_parts = ["python", "-m", "pytest"]
     
-    # 添加测试路径
+    # Add test path
     if test_path:
         cmd_parts.append(test_path)
     else:
         cmd_parts.append("tests/")
     
-    # 添加标记
+    # Add markers
     if markers:
         for marker in markers:
             cmd_parts.extend(["-m", marker])
     
-    # 添加并行执行
+    # Add parallel execution
     if parallel:
         cmd_parts.extend(["-n", str(parallel)])
     
-    # 添加HTML报告
+    # Add HTML report
     if html_report:
         cmd_parts.extend([
             "--html=reports/report.html",
             "--self-contained-html"
         ])
     
-    # 添加JUnit XML报告
+    # Add JUnit XML report
     cmd_parts.extend(["--junitxml=reports/junit.xml"])
     
-    # 添加详细输出
+    # Add verbose output
     cmd_parts.extend(["-v", "--tb=short"])
     
     command = " ".join(cmd_parts)
     
-    # 运行测试
+    # Run tests
     result = run_command(command, "Test execution")
     
     if result:
@@ -101,53 +101,53 @@ def run_tests(test_path=None, markers=None, parallel=None, html_report=True):
 
 
 def main():
-    """主函数"""
+    """Main function"""
     parser = argparse.ArgumentParser(description="ATF Test Runner")
     
     parser.add_argument(
         "--test-path",
-        help="测试路径 (例如: tests/com.honda.roadsync.duo/)"
+        help="Test path (e.g., tests/com.honda.roadsync.duo/)"
     )
     
     parser.add_argument(
         "--markers",
         nargs="+",
-        help="测试标记 (例如: smoke regression)"
+        help="Test markers (e.g., smoke regression)"
     )
     
     parser.add_argument(
         "--parallel",
         type=int,
-        help="并行执行数量"
+        help="Number of parallel executions"
     )
     
     parser.add_argument(
         "--no-html",
         action="store_true",
-        help="不生成HTML报告"
+        help="Do not generate HTML report"
     )
     
     parser.add_argument(
         "--setup-only",
         action="store_true",
-        help="仅设置环境"
+        help="Setup environment only"
     )
     
     args = parser.parse_args()
     
-    # 初始化日志
+    # Initialize logging
     Log.info("ATF Test Runner started")
     Log.info(f"Python version: {sys.version}")
     Log.info(f"Working directory: {os.getcwd()}")
     
-    # 设置环境
+    # Setup environment
     setup_environment()
     
     if args.setup_only:
         Log.info("Environment setup completed")
         return
     
-    # 运行测试
+    # Run tests
     success = run_tests(
         test_path=args.test_path,
         markers=args.markers,

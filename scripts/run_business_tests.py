@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Business Test Runner Script
-业务测试运行脚本 - 支持本地和CI/CD环境
+Business test runner script - supports local and CI/CD environments
 """
 
 import os
@@ -12,11 +12,11 @@ from pathlib import Path
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 
-# 添加项目根目录到Python路径
+# Add project root directory to Python path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# 确保当前工作目录也在Python路径中
+# Ensure current working directory is also in Python path
 current_dir = os.getcwd()
 if current_dir not in sys.path:
     sys.path.insert(0, current_dir)
@@ -26,7 +26,7 @@ from core.utils.file_utils import FileUtils
 
 
 class BusinessTestRunner:
-    """业务测试运行器"""
+    """Business test runner"""
     
     def __init__(self):
         self.project_root = project_root
@@ -34,12 +34,12 @@ class BusinessTestRunner:
         self.reports_dir = self.project_root / "reports"
         self.logs_dir = self.project_root / "logs"
         
-        # 确保目录存在
+        # Ensure directories exist
         FileUtils.ensure_dir(str(self.reports_dir))
         FileUtils.ensure_dir(str(self.logs_dir))
     
     def get_business_paths(self) -> List[str]:
-        """获取所有业务路径"""
+        """Get all business paths"""
         business_paths = []
         if self.tests_dir.exists():
             for item in self.tests_dir.iterdir():
@@ -48,12 +48,12 @@ class BusinessTestRunner:
         return sorted(business_paths)
     
     def validate_business_path(self, business_path: str) -> bool:
-        """验证业务路径是否存在"""
+        """Validate if business path exists"""
         path = self.tests_dir / business_path
         return path.exists() and path.is_dir()
     
     def get_test_files(self, business_path: str) -> List[str]:
-        """获取业务路径下的测试文件"""
+        """Get test files under business path"""
         test_files = []
         path = self.tests_dir / business_path
         
@@ -73,36 +73,36 @@ class BusinessTestRunner:
                           verbose: bool = True,
                           capture: str = "no") -> bool:
         
-        # 注意：pyenv环境激活需要在shell脚本中处理，这里只是记录
+        # Note: pyenv environment activation needs to be handled by shell script, just recording here
         Log.info("Using Python environment (pyenv activation should be handled by shell script)")
         """
-        运行pytest命令
+        Run pytest command
         
         Args:
-            test_path: 测试路径
-            markers: 测试标记
-            parallel: 并行数量
-            html_report: 是否生成HTML报告
-            junit_report: 是否生成JUnit报告
-            allure_report: 是否生成Allure报告
-            verbose: 是否详细输出
-            capture: 输出捕获模式
+            test_path: Test path
+            markers: Test markers
+            parallel: Number of parallel processes
+            html_report: Whether to generate HTML report
+            junit_report: Whether to generate JUnit report
+            allure_report: Whether to generate Allure report
+            verbose: Whether to output verbosely
+            capture: Output capture mode
             
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         cmd_parts = ["python", "-m", "pytest", test_path]
         
-        # 添加标记
+        # Add markers
         if markers:
             for marker in markers:
                 cmd_parts.extend(["-m", marker])
         
-        # 并行执行
+        # Parallel execution
         if parallel and parallel > 1:
             cmd_parts.extend(["-n", str(parallel)])
         
-        # 报告配置
+        # Report configuration
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         business_name = Path(test_path).parts[-1] if test_path != "tests/" else "all"
         
@@ -124,13 +124,13 @@ class BusinessTestRunner:
             FileUtils.ensure_dir(allure_results)
             cmd_parts.extend(["--alluredir", allure_results])
         
-        # 输出配置
+        # Output configuration
         if verbose:
             cmd_parts.append("-v")
         
         cmd_parts.extend(["--tb=short", f"--capture={capture}"])
         
-        # 执行命令
+        # Execute command
         command = " ".join(cmd_parts)
         Log.info(f"[Executing Command][CMD]: {command}")
         
@@ -162,27 +162,27 @@ class BusinessTestRunner:
                           junit_report: bool = True,
                           allure_report: bool = False) -> bool:
         """
-        运行指定业务的测试
+        Run tests for specified business
         
         Args:
-            business_path: 业务路径
-            markers: 测试标记
-            parallel: 并行数量
-            html_report: 是否生成HTML报告
-            junit_report: 是否生成JUnit报告
-            allure_report: 是否生成Allure报告
+            business_path: Business path
+            markers: Test markers
+            parallel: Number of parallel processes
+            html_report: Whether to generate HTML report
+            junit_report: Whether to generate JUnit report
+            allure_report: Whether to generate Allure report
             
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         Log.info(f"Starting tests for business: {business_path}")
         
-        # 验证业务路径
+        # Validate business path
         if not self.validate_business_path(business_path):
             Log.error(f"Invalid business path: {business_path}")
             return False
         
-        # 获取测试文件
+        # Get test files
         test_files = self.get_test_files(business_path)
         if not test_files:
             Log.warning(f"No test files found in {business_path}")
@@ -190,7 +190,7 @@ class BusinessTestRunner:
         
         Log.info(f"Found {len(test_files)} test files: {test_files}")
         
-        # 运行测试
+        # Run tests
         test_path = f"tests/{business_path}/"
         return self.run_pytest_command(
             test_path=test_path,
@@ -208,17 +208,17 @@ class BusinessTestRunner:
                               junit_report: bool = True,
                               allure_report: bool = False) -> Dict[str, bool]:
         """
-        运行所有业务的测试
+        Run tests for all businesses
         
         Args:
-            markers: 测试标记
-            parallel: 并行数量
-            html_report: 是否生成HTML报告
-            junit_report: 是否生成JUnit报告
-            allure_report: 是否生成Allure报告
+            markers: Test markers
+            parallel: Number of parallel processes
+            html_report: Whether to generate HTML report
+            junit_report: Whether to generate JUnit report
+            allure_report: Whether to generate Allure report
             
         Returns:
-            Dict[str, bool]: 各业务测试结果
+            Dict[str, bool]: Test results for each business
         """
         Log.info("Starting all business tests")
         
@@ -245,7 +245,7 @@ class BusinessTestRunner:
         return results
     
     def generate_summary_report(self, results: Dict[str, bool]) -> None:
-        """生成测试结果摘要报告"""
+        """Generate test result summary report"""
         Log.info("Generating test summary report")
         
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -269,10 +269,10 @@ class BusinessTestRunner:
 
 
 def main():
-    """主函数"""
+    """Main function"""
     parser = argparse.ArgumentParser(description="Business Test Runner")
     
-    # 基本参数
+    # Basic parameters
     parser.add_argument(
         "--business", "-b",
         help="Business path to test (e.g., jp.co.matsukiyococokara.app)"
@@ -283,14 +283,14 @@ def main():
         help="Run all business tests"
     )
     
-    # 测试标记
+    # Test markers
     parser.add_argument(
         "--markers", "-m",
         nargs="+",
         help="Test markers (e.g., smoke daily regression)"
     )
     
-    # 执行配置
+    # Execution configuration
     parser.add_argument(
         "--parallel", "-n",
         type=int,
@@ -312,7 +312,7 @@ def main():
         help="Enable Allure report generation"
     )
     
-    # 环境配置
+    # Environment configuration
     parser.add_argument(
         "--env",
         choices=["local", "ci", "staging", "production"],
@@ -322,18 +322,18 @@ def main():
     
     args = parser.parse_args()
     
-    # 初始化运行器
+    # Initialize runner
     runner = BusinessTestRunner()
     
-    # 根据环境调整配置
+    # Adjust configuration based on environment
     if args.env == "ci":
-        # CI环境配置
+        # CI environment configuration
         if not args.parallel:
-            args.parallel = 4  # CI环境默认4个并行进程
+            args.parallel = 4  # CI environment default 4 parallel processes
         if not args.markers:
-            args.markers = ["smoke"]  # CI环境默认运行冒烟测试
+            args.markers = ["smoke"]  # CI environment default run smoke tests
     
-    # 运行测试
+    # Run tests
     if args.all:
         Log.info("Running all business tests")
         results = runner.run_all_business_tests(
@@ -345,7 +345,7 @@ def main():
         )
         runner.generate_summary_report(results)
         
-        # 检查整体结果
+        # Check overall results
         all_passed = all(results.values())
         if all_passed:
             Log.success("All business tests passed!")
@@ -373,7 +373,7 @@ def main():
             sys.exit(1)
     
     else:
-        # 显示可用的业务路径
+        # Show available business paths
         business_paths = runner.get_business_paths()
         if business_paths:
             Log.info("Available business paths:")

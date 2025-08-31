@@ -1,6 +1,6 @@
 """
 Application Configuration
-应用配置管理类
+Application configuration management class
 """
 
 import os
@@ -13,9 +13,9 @@ from ..utils.file_utils import FileUtils
 
 @dataclass
 class AppConfig:
-    """应用配置类"""
+    """Application configuration class"""
     
-    # 应用基本信息
+    # Application basic information
     app_name: str = ""
     app_version: str = ""
     app_package: str = ""
@@ -23,36 +23,36 @@ class AppConfig:
     app_bundle_id: str = ""  # iOS
     app_path: str = ""
     
-    # 应用类型
+    # Application type
     app_type: str = "native"  # native/web/hybrid
     
-    # 启动配置
+    # Launch configuration
     launch_timeout: int = 30
     startup_timeout: int = 60
     
-    # 权限配置
+    # Permission configuration
     auto_grant_permissions: bool = True
     permissions: List[str] = field(default_factory=list)
     
-    # 数据配置
+    # Data configuration
     no_reset: bool = False
     full_reset: bool = False
     clear_data: bool = False
     
-    # 网络配置
+    # Network configuration
     network_profile: str = ""
     proxy_settings: Dict[str, Any] = field(default_factory=dict)
     
-    # 其他配置
+    # Other configuration
     additional_config: Dict[str, Any] = field(default_factory=dict)
     
     def __post_init__(self):
-        """初始化后处理"""
-        # 从环境变量加载配置
+        """Post-initialization processing"""
+        # Load configuration from environment variables
         self._load_from_env()
     
     def _load_from_env(self):
-        """从环境变量加载配置"""
+        """Load configuration from environment variables"""
         env_mappings = {
             'APP_NAME': 'app_name',
             'APP_VERSION': 'app_version',
@@ -68,7 +68,7 @@ class AppConfig:
         for env_var, attr_name in env_mappings.items():
             value = os.getenv(env_var)
             if value is not None:
-                # 处理数字类型
+                # Handle numeric types
                 if attr_name in ['launch_timeout', 'startup_timeout']:
                     try:
                         value = int(value)
@@ -81,10 +81,10 @@ class AppConfig:
     
     def get_app_info(self) -> Dict[str, Any]:
         """
-        获取应用信息
+        Get application information
         
         Returns:
-            Dict[str, Any]: 应用信息字典
+            Dict[str, Any]: Application information dictionary
         """
         app_info = {
             'app_name': self.app_name,
@@ -98,17 +98,17 @@ class AppConfig:
             'startup_timeout': self.startup_timeout,
         }
         
-        # 添加额外配置
+        # Add additional configuration
         app_info.update(self.additional_config)
         
         return app_info
     
     def to_dict(self) -> Dict[str, Any]:
         """
-        转换为字典
+        Convert to dictionary
         
         Returns:
-            Dict[str, Any]: 配置字典
+            Dict[str, Any]: Configuration dictionary
         """
         return {
             'app_name': self.app_name,
@@ -133,26 +133,26 @@ class AppConfig:
     @classmethod
     def from_dict(cls, config_dict: Dict[str, Any]) -> 'AppConfig':
         """
-        从字典创建配置对象
+        Create configuration object from dictionary
         
         Args:
-            config_dict: 配置字典
+            config_dict: Configuration dictionary
             
         Returns:
-            AppConfig: 配置对象
+            AppConfig: Configuration object
         """
         return cls(**config_dict)
     
     @classmethod
     def from_file(cls, filepath: str) -> 'AppConfig':
         """
-        从文件加载配置
+        Load configuration from file
         
         Args:
-            filepath: 配置文件路径
+            filepath: Configuration file path
             
         Returns:
-            AppConfig: 配置对象
+            AppConfig: Configuration object
         """
         try:
             if filepath.endswith('.json'):
@@ -171,10 +171,10 @@ class AppConfig:
     
     def save_to_file(self, filepath: str):
         """
-        保存配置到文件
+        Save configuration to file
         
         Args:
-            filepath: 文件路径
+            filepath: File path
         """
         try:
             config_dict = self.to_dict()
@@ -194,22 +194,22 @@ class AppConfig:
     
     def validate(self) -> bool:
         """
-        验证配置
+        Validate configuration
         
         Returns:
-            bool: 配置是否有效
+            bool: Whether configuration is valid
         """
         errors = []
         
-        # 检查应用类型
+        # Check application type
         if self.app_type not in ['native', 'web', 'hybrid']:
             errors.append("app_type must be 'native', 'web', or 'hybrid'")
         
-        # 检查应用路径
+        # Check application path
         if self.app_path and not FileUtils.file_exists(self.app_path):
             errors.append(f"App file not found: {self.app_path}")
         
-        # 检查超时时间
+        # Check timeout values
         if self.launch_timeout <= 0:
             errors.append("launch_timeout must be greater than 0")
         
@@ -226,10 +226,10 @@ class AppConfig:
     
     def get_app_identifier(self) -> str:
         """
-        获取应用标识符
+        Get application identifier
         
         Returns:
-            str: 应用标识符
+            str: Application identifier
         """
         if self.app_package:
             return self.app_package
@@ -242,10 +242,10 @@ class AppConfig:
     
     def get_app_summary(self) -> str:
         """
-        获取应用摘要信息
+        Get application summary information
         
         Returns:
-            str: 应用摘要
+            str: Application summary
         """
         parts = []
         
@@ -266,10 +266,10 @@ class AppConfig:
     
     def add_permission(self, permission: str):
         """
-        添加权限
+        Add permission
         
         Args:
-            permission: 权限名称
+            permission: Permission name
         """
         if permission not in self.permissions:
             self.permissions.append(permission)
@@ -277,10 +277,10 @@ class AppConfig:
     
     def remove_permission(self, permission: str):
         """
-        移除权限
+        Remove permission
         
         Args:
-            permission: 权限名称
+            permission: Permission name
         """
         if permission in self.permissions:
             self.permissions.remove(permission)
@@ -288,25 +288,25 @@ class AppConfig:
     
     def has_permission(self, permission: str) -> bool:
         """
-        检查是否有指定权限
+        Check if has specified permission
         
         Args:
-            permission: 权限名称
+            permission: Permission name
             
         Returns:
-            bool: 是否有权限
+            bool: Whether has permission
         """
         return permission in self.permissions
     
     def set_proxy(self, host: str, port: int, username: str = "", password: str = ""):
         """
-        设置代理
+        Set proxy
         
         Args:
-            host: 代理主机
-            port: 代理端口
-            username: 用户名（可选）
-            password: 密码（可选）
+            host: Proxy host
+            port: Proxy port
+            username: Username (optional)
+            password: Password (optional)
         """
         self.proxy_settings = {
             'host': host,
@@ -317,6 +317,6 @@ class AppConfig:
         Log.info(f"Set proxy: {host}:{port}")
     
     def clear_proxy(self):
-        """清除代理设置"""
+        """Clear proxy settings"""
         self.proxy_settings.clear()
         Log.info("Cleared proxy settings")

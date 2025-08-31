@@ -1,4 +1,4 @@
 """
 Examples package
-示例代码包
+Example code package
 """

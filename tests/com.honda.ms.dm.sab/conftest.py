@@ -1,6 +1,6 @@
 """
 Pytest configuration for Honda MS DM SAB tests
-Honda MS DM SAB测试的pytest配置
+Pytest configuration for Honda MS DM SAB tests
 """
 
 import pytest
@@ -13,7 +13,7 @@ from core.utils.logger import Log
 
 @pytest.fixture(scope="session")
 def appium_config():
-    """Appium配置夹具"""
+    """Appium configuration fixture"""
     config = AppiumConfig(
         server_url="http://localhost:4723",
         platform_name="Android",
@@ -30,7 +30,7 @@ def appium_config():
 
 @pytest.fixture(scope="session")
 def device_config():
-    """设备配置夹具"""
+    """Device configuration fixture"""
     config = DeviceConfig(
         device_name="Android Device",
         platform="Android",
@@ -45,7 +45,7 @@ def device_config():
 
 @pytest.fixture(scope="session")
 def app_config():
-    """应用配置夹具"""
+    """Application configuration fixture"""
     config = AppConfig(
         app_name="Honda MS DM SAB",
         app_version="1.0.0",
@@ -62,7 +62,7 @@ def app_config():
 
 @pytest.fixture(scope="function")
 def driver(appium_config):
-    """Appium驱动夹具"""
+    """Appium driver fixture"""
     driver = AppiumDriver(appium_config)
     
     try:
@@ -76,10 +76,10 @@ def driver(appium_config):
 
 @pytest.fixture(scope="function")
 def test_data():
-    """测试数据夹具"""
+    """Test data fixture"""
     return {
         "valid_username": "admin@honda.com",
-        "valid_password": "AdminPass123",
+        "valid_password": "AdminPass123!",  # Test password for demo purposes
         "invalid_username": "invalid@test.com",
         "invalid_password": "WrongPassword",
         "test_device_id": "DEVICE001",

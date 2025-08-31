@@ -1,6 +1,6 @@
 """
 Main Page Object for Monoxer App
-Monoxer应用主页面对象
+Main page object for Monoxer App
 """
 
 import time
@@ -14,26 +14,27 @@ from datas.test_data import MonoxerTestData
 
 
 class MainPage(PageObject):
-    """Monoxer应用主页面对象"""
+    """Main page object for Monoxer App"""
     
-    def __init__(self, driver):
+    def __init__(self, driver, test_data=None):
         super().__init__(driver)
-        self.wait = WebDriverWait(driver, MonoxerTestData.WAIT_TIME)
+        self.test_data = test_data or MonoxerTestData
+        self.wait = WebDriverWait(driver, self.test_data.WAIT_TIME)
     
     def click_home_tab(self) -> bool:
         """
-        点击Home标签
+        Click Home tab
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             home_tab = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ID, MonoxerTestData.Locators.HOME_TAB)
+                (AppiumBy.ID, self.test_data.Locators.HOME_TAB)
             ))
             home_tab.click()
             Log.info("Clicked home tab")
-            time.sleep(2)  # 等待页面加载
+            time.sleep(2)  # Wait for page to load
             return True
         except Exception as e:
             Log.error(f"Failed to click home tab: {str(e)}")
@@ -41,18 +42,18 @@ class MainPage(PageObject):
     
     def open_sidebar(self) -> bool:
         """
-        打开侧边栏
+        Open sidebar
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             header_selector = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ID, MonoxerTestData.Locators.HEADER_SELECTOR)
+                (AppiumBy.ID, self.test_data.Locators.HEADER_SELECTOR)
             ))
             header_selector.click()
             Log.info("Sidebar opened successfully")
-            time.sleep(2)  # 等待侧边栏动画
+            time.sleep(2)  # Wait for sidebar animation
             return True
         except Exception as e:
             Log.error(f"Failed to open sidebar: {str(e)}")
@@ -60,14 +61,14 @@ class MainPage(PageObject):
     
     def click_invitation_code(self) -> bool:
         """
-        点击邀请码按钮
+        Click invitation code button
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             invitation_code_btn = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ANDROID_UIAUTOMATOR, MonoxerTestData.Locators.INVITATION_CODE_BTN)
+                (AppiumBy.ANDROID_UIAUTOMATOR, self.test_data.Locators.INVITATION_CODE_BTN)
             ))
             invitation_code_btn.click()
             Log.info("Clicked 'Enter invitation code'")
@@ -78,14 +79,14 @@ class MainPage(PageObject):
     
     def click_sync_button(self) -> bool:
         """
-        点击同步按钮
+        Click sync button
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             sync_btn = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ANDROID_UIAUTOMATOR, MonoxerTestData.Locators.SYNC_BTN)
+                (AppiumBy.ANDROID_UIAUTOMATOR, self.test_data.Locators.SYNC_BTN)
             ))
             sync_btn.click()
             Log.info("Clicked 'Sync' button")
@@ -96,14 +97,14 @@ class MainPage(PageObject):
     
     def click_linear_layout(self) -> bool:
         """
-        点击linear_layout按钮
+        Click linear_layout button
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             linear_layout_btn = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ID, MonoxerTestData.Locators.LINEAR_LAYOUT)
+                (AppiumBy.ID, self.test_data.Locators.LINEAR_LAYOUT)
             ))
             linear_layout_btn.click()
             Log.info("Clicked linear_layout to return to main page")
@@ -115,14 +116,14 @@ class MainPage(PageObject):
     
     def click_navigate_up(self) -> bool:
         """
-        点击返回按钮
+        Click back button
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             back_btn = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ACCESSIBILITY_ID, MonoxerTestData.Locators.NAVIGATE_UP)
+                (AppiumBy.ACCESSIBILITY_ID, self.test_data.Locators.NAVIGATE_UP)
             ))
             back_btn.click()
             Log.info("Clicked 'Navigate up' button")
@@ -134,14 +135,14 @@ class MainPage(PageObject):
     
     def is_page_loaded(self) -> bool:
         """
-        检查页面是否加载完成
+        Check if page is loaded completely
         
         Returns:
-            bool: 是否加载完成
+            bool: Whether loaded completely
         """
         try:
-            # 检查Home标签是否存在
-            self.driver.find_element(AppiumBy.ID, MonoxerTestData.Locators.HOME_TAB)
+            # Check if Home tab exists
+            self.driver.find_element(AppiumBy.ID, self.test_data.Locators.HOME_TAB)
             return True
         except Exception:
             return False

@@ -1,6 +1,6 @@
 """
 API Client
-API客户端，提供与外部系统交互的接口
+API client, providing interfaces for interaction with external systems
 """
 
 import json
@@ -15,16 +15,16 @@ from ..models.test_case import TestCase
 
 
 class ApiClient:
-    """API客户端类"""
+    """API client class"""
     
     def __init__(self, base_url: str, timeout: int = 30, headers: Optional[Dict[str, str]] = None):
         """
-        初始化API客户端
+        Initialize API client
         
         Args:
-            base_url: API基础URL
-            timeout: 请求超时时间（秒）
-            headers: 请求头
+            base_url: API base URL
+            timeout: Request timeout (seconds)
+            headers: Request headers
         """
         self.base_url = base_url.rstrip('/')
         self.timeout = timeout
@@ -40,16 +40,16 @@ class ApiClient:
     def _make_request(self, method: str, endpoint: str, data: Optional[Dict[str, Any]] = None, 
                      params: Optional[Dict[str, Any]] = None) -> requests.Response:
         """
-        发送HTTP请求
+        Send HTTP request
         
         Args:
-            method: HTTP方法
-            endpoint: API端点
-            data: 请求数据
-            params: 查询参数
+            method: HTTP method
+            endpoint: API endpoint
+            data: Request data
+            params: Query parameters
             
         Returns:
-            requests.Response: 响应对象
+            requests.Response: Response object
         """
         url = f"{self.base_url}/{endpoint.lstrip('/')}"
         
@@ -66,7 +66,7 @@ class ApiClient:
             
             Log.info(f"Response status: {response.status_code}")
             
-            # 检查响应状态
+            # Check response status
             response.raise_for_status()
             
             return response
@@ -78,14 +78,14 @@ class ApiClient:
     def get_test_cases(self, project_id: Optional[str] = None, 
                       status: Optional[str] = None) -> List[TestCase]:
         """
-        获取测试用例列表
+        Get test case list
         
         Args:
-            project_id: 项目ID（可选）
-            status: 状态过滤（可选）
+            project_id: Project ID (optional)
+            status: Status filter (optional)
             
         Returns:
-            List[TestCase]: 测试用例列表
+            List[TestCase]: Test case list
         """
         params = {}
         if project_id:
@@ -106,13 +106,13 @@ class ApiClient:
     
     def get_test_case(self, test_case_id: str) -> TestCase:
         """
-        获取单个测试用例
+        Get single test case
         
         Args:
-            test_case_id: 测试用例ID
+            test_case_id: Test case ID
             
         Returns:
-            TestCase: 测试用例对象
+            TestCase: Test case object
         """
         response = self._make_request('GET', f'/test-cases/{test_case_id}')
         data = response.json()
@@ -123,13 +123,13 @@ class ApiClient:
     
     def create_test_case(self, test_case: TestCase) -> TestCase:
         """
-        创建测试用例
+        Create test case
         
         Args:
-            test_case: 测试用例对象
+            test_case: Test case object
             
         Returns:
-            TestCase: 创建的测试用例对象
+            TestCase: Created test case object
         """
         data = test_case.to_dict()
         response = self._make_request('POST', '/test-cases', data=data)
@@ -141,14 +141,14 @@ class ApiClient:
     
     def update_test_case(self, test_case_id: str, test_case: TestCase) -> TestCase:
         """
-        更新测试用例
+        Update test case
         
         Args:
-            test_case_id: 测试用例ID
-            test_case: 测试用例对象
+            test_case_id: Test case ID
+            test_case: Test case object
             
         Returns:
-            TestCase: 更新后的测试用例对象
+            TestCase: Updated test case object
         """
         data = test_case.to_dict()
         response = self._make_request('PUT', f'/test-cases/{test_case_id}', data=data)
@@ -160,13 +160,13 @@ class ApiClient:
     
     def delete_test_case(self, test_case_id: str) -> bool:
         """
-        删除测试用例
+        Delete test case
         
         Args:
-            test_case_id: 测试用例ID
+            test_case_id: Test case ID
             
         Returns:
-            bool: 是否删除成功
+            bool: Whether deletion was successful
         """
         response = self._make_request('DELETE', f'/test-cases/{test_case_id}')
         Log.info(f"Deleted test case: {test_case_id}")
@@ -174,13 +174,13 @@ class ApiClient:
     
     def submit_test_result(self, test_result: TestResult) -> TestResult:
         """
-        提交测试结果
+        Submit test result
         
         Args:
-            test_result: 测试结果对象
+            test_result: Test result object
             
         Returns:
-            TestResult: 提交的测试结果对象
+            TestResult: Submitted test result object
         """
         data = test_result.to_dict()
         response = self._make_request('POST', '/test-results', data=data)
@@ -195,16 +195,16 @@ class ApiClient:
                         start_date: Optional[datetime] = None,
                         end_date: Optional[datetime] = None) -> List[TestResult]:
         """
-        获取测试结果列表
+        Get test result list
         
         Args:
-            test_case_id: 测试用例ID（可选）
-            status: 状态过滤（可选）
-            start_date: 开始日期（可选）
-            end_date: 结束日期（可选）
+            test_case_id: Test case ID (optional)
+            status: Status filter (optional)
+            start_date: Start date (optional)
+            end_date: End date (optional)
             
         Returns:
-            List[TestResult]: 测试结果列表
+            List[TestResult]: Test result list
         """
         params = {}
         if test_case_id:
@@ -229,13 +229,13 @@ class ApiClient:
     
     def get_test_result(self, result_id: str) -> TestResult:
         """
-        获取单个测试结果
+        Get single test result
         
         Args:
-            result_id: 测试结果ID
+            result_id: Test result ID
             
         Returns:
-            TestResult: 测试结果对象
+            TestResult: Test result object
         """
         response = self._make_request('GET', f'/test-results/{result_id}')
         data = response.json()
@@ -246,14 +246,14 @@ class ApiClient:
     
     def upload_file(self, file_path: str, file_type: str = "screenshot") -> str:
         """
-        上传文件
+        Upload file
         
         Args:
-            file_path: 文件路径
-            file_type: 文件类型
+            file_path: File path
+            file_type: File type
             
         Returns:
-            str: 文件URL
+            str: File URL
         """
         if not FileUtils.file_exists(file_path):
             raise FileNotFoundError(f"File not found: {file_path}")
@@ -287,41 +287,41 @@ class ApiClient:
     
     def get_health_status(self) -> Dict[str, Any]:
         """
-        获取API健康状态
+        Get API health status
         
         Returns:
-            Dict[str, Any]: 健康状态信息
+            Dict[str, Any]: Health status information
         """
         response = self._make_request('GET', '/health')
         return response.json()
     
     def get_api_info(self) -> Dict[str, Any]:
         """
-        获取API信息
+        Get API information
         
         Returns:
-            Dict[str, Any]: API信息
+            Dict[str, Any]: API information
         """
         response = self._make_request('GET', '/info')
         return response.json()
     
     def set_auth_token(self, token: str):
         """
-        设置认证令牌
+        Set authentication token
         
         Args:
-            token: 认证令牌
+            token: Authentication token
         """
         self.session.headers['Authorization'] = f'Bearer {token}'
         Log.info("Authentication token set")
     
     def clear_auth_token(self):
-        """清除认证令牌"""
+        """Clear authentication token"""
         if 'Authorization' in self.session.headers:
             del self.session.headers['Authorization']
             Log.info("Authentication token cleared")
     
     def close(self):
-        """关闭客户端连接"""
+        """Close client connection"""
         self.session.close()
         Log.info("API client closed")

@@ -1,6 +1,6 @@
 """
 Screenshot Utilities
-截图工具类，提供截图管理、对比等功能
+Screenshot utility class, providing screenshot management, comparison and other functions
 """
 
 import os
@@ -11,6 +11,7 @@ from typing import Optional, List, Tuple
 from PIL import Image, ImageChops
 
 from .logger import Log
+from .path_utils import PathUtils
 
 
 class ScreenshotUtils:
@@ -27,8 +28,11 @@ class ScreenshotUtils:
         Returns:
             tuple: (base_dir, cur_dir)
         """
-        base_dir = f"tests/{app_package}/screenshots/base"
-        cur_dir = f"tests/{app_package}/screenshots/cur"
+        # Use PathUtils to get project root
+        project_root = PathUtils.get_project_root()
+        
+        base_dir = os.path.join(project_root, f"tests/{app_package}/screenshots/base")
+        cur_dir = os.path.join(project_root, f"tests/{app_package}/screenshots/cur")
         return base_dir, cur_dir
     
     @staticmethod
@@ -53,7 +57,7 @@ class ScreenshotUtils:
             
             now = datetime.now().strftime("%Y%m%d_%H%M%S")
             screenshot_path = f"{screenshot_dir}/{now}_{step_num}_{name}.png"
-            driver.take_screenshot(screenshot_path)
+            driver.save_screenshot(screenshot_path)
             
             Log.info(f"Screenshot saved: {screenshot_path}")
             return screenshot_path

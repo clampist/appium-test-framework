@@ -1,0 +1,54 @@
+# Appium Configuration for Monoxer Tests
+# This file contains Appium capabilities for different language environments
+
+# Common Appium capabilities shared across all environments
+common:
+  platformName: "Android"
+  automationName: "UiAutomator2"
+  appPackage: "com.monoxer"
+  appActivity: "com.monoxer.view.main.MainActivity"
+  noReset: "true"
+  ensureWebviewsHavePages: true
+  nativeWebScreenshot: true
+  newCommandTimeout: 3600
+  connectHardwareKeyboard: true
+
+# Environment-specific configurations
+environments:
+  # English environment (default)
+  en:
+    platformVersion: "13"
+    deviceName: "emulator-5554"
+    description: "English version - Android 13 emulator"
+    
+  # Japanese environment
+  ja:
+    platformVersion: "14"
+    deviceName: "emulator-5556"
+    description: "Japanese version - Android 14 emulator"
+    
+
+
+# Appium server configuration
+server:
+  host: "127.0.0.1"
+  port: 4723
+  path: ""
+  
+# Timeout configurations
+timeouts:
+  implicit_wait: 10
+  explicit_wait: 15
+  page_load: 30
+  
+# Screenshot configurations
+screenshots:
+  enabled: true
+  format: "png"
+  quality: 90
+  
+# Logging configurations
+logging:
+  level: "INFO"
+  save_logs: true
+  log_dir: "logs"

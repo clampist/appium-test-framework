@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Basic Usage Example
-基本使用示例
+Basic usage example
 """
 
 from core.driver.appium_driver import AppiumDriver
@@ -10,10 +10,10 @@ from core.utils.logger import Log
 
 
 def main():
-    """基本使用示例"""
+    """Basic usage example"""
     Log.info("Starting basic usage example")
     
-    # 创建Appium配置
+    # Create Appium configuration
     config = AppiumConfig(
         server_url="http://localhost:4723",
         platform_name="Android",
@@ -23,32 +23,32 @@ def main():
         timeout=30
     )
     
-    # 验证配置
+    # Validate configuration
     if not config.validate():
         Log.error("Invalid Appium configuration")
         return
     
-    # 创建驱动
+    # Create driver
     driver = AppiumDriver(config)
     
     try:
-        # 启动驱动
+        # Start driver
         driver.start_driver()
         Log.info("Driver started successfully")
         
-        # 获取当前Activity
+        # Get current activity
         current_activity = driver.get_current_activity()
         Log.info(f"Current activity: {current_activity}")
         
-        # 获取当前包名
+        # Get current package name
         current_package = driver.get_current_package()
         Log.info(f"Current package: {current_package}")
         
-        # 截图
+        # Take screenshot
         screenshot_path = driver.take_screenshot("example_screenshot")
         Log.info(f"Screenshot saved: {screenshot_path}")
         
-        # 获取页面源码
+        # Get page source
         page_source = driver.get_page_source()
         Log.info(f"Page source length: {len(page_source)}")
         
@@ -58,7 +58,7 @@ def main():
         Log.error(f"Basic usage example failed: {str(e)}")
         
     finally:
-        # 关闭驱动
+        # Close driver
         driver.quit_driver()
         Log.info("Driver closed")
 

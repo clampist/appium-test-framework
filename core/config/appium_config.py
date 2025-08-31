@@ -1,6 +1,6 @@
 """
 Appium Configuration
-Appium配置管理类
+Appium configuration management class
 """
 
 import os
@@ -13,50 +13,50 @@ from ..utils.file_utils import FileUtils
 
 @dataclass
 class AppiumConfig:
-    """Appium配置类"""
+    """Appium configuration class"""
     
-    # 服务器配置
+    # Server configuration
     server_url: str = "http://localhost:4723"
     server_host: str = "localhost"
     server_port: int = 4723
     
-    # 会话配置
+    # Session configuration
     timeout: int = 30
     implicit_wait: int = 10
     new_command_timeout: int = 60
     
-    # 平台配置
+    # Platform configuration
     platform_name: str = "Android"
     platform_version: str = ""
     device_name: str = ""
     automation_name: str = "UiAutomator2"
     
-    # 应用配置
+    # Application configuration
     app_package: str = ""
     app_activity: str = ""
     app_path: str = ""
     app_bundle_id: str = ""  # iOS
     
-    # 其他配置
+    # Other configuration
     no_reset: bool = False
     full_reset: bool = False
     auto_grant_permissions: bool = True
     auto_accept_alerts: bool = True
     
-    # 高级配置
+    # Advanced configuration
     additional_capabilities: Dict[str, Any] = field(default_factory=dict)
     
     def __post_init__(self):
-        """初始化后处理"""
-        # 从环境变量加载配置
+        """Post-initialization processing"""
+        # Load configuration from environment variables
         self._load_from_env()
         
-        # 构建服务器URL
+        # Build server URL
         if not self.server_url.startswith("http"):
             self.server_url = f"http://{self.server_host}:{self.server_port}"
     
     def _load_from_env(self):
-        """从环境变量加载配置"""
+        """Load configuration from environment variables"""
         env_mappings = {
             'APPIUM_SERVER_URL': 'server_url',
             'APPIUM_SERVER_HOST': 'server_host',
@@ -75,7 +75,7 @@ class AppiumConfig:
         for env_var, attr_name in env_mappings.items():
             value = os.getenv(env_var)
             if value is not None:
-                # 处理数字类型
+                # Handle numeric types
                 if attr_name in ['server_port', 'timeout', 'implicit_wait', 'new_command_timeout']:
                     try:
                         value = int(value)
@@ -88,10 +88,10 @@ class AppiumConfig:
     
     def get_capabilities(self) -> Dict[str, Any]:
         """
-        获取Appium capabilities
+        Get Appium capabilities
         
         Returns:
-            Dict[str, Any]: capabilities字典
+            Dict[str, Any]: Capabilities dictionary
         """
         capabilities = {
             'platformName': self.platform_name,
@@ -103,7 +103,7 @@ class AppiumConfig:
             'fullReset': self.full_reset,
         }
         
-        # 添加平台特定配置
+        # Add platform-specific configuration
         if self.platform_name.lower() == 'android':
             if self.platform_version:
                 capabilities['platformVersion'] = self.platform_version
@@ -125,7 +125,7 @@ class AppiumConfig:
             if self.app_path:
                 capabilities['app'] = self.app_path
         
-        # 添加额外配置
+        # Add additional configuration
         capabilities.update(self.additional_capabilities)
         
         Log.info(f"Generated capabilities: {capabilities}")
@@ -133,10 +133,10 @@ class AppiumConfig:
     
     def to_dict(self) -> Dict[str, Any]:
         """
-        转换为字典
+        Convert to dictionary
         
         Returns:
-            Dict[str, Any]: 配置字典
+            Dict[str, Any]: Configuration dictionary
         """
         return {
             'server_url': self.server_url,
@@ -163,26 +163,26 @@ class AppiumConfig:
     @classmethod
     def from_dict(cls, config_dict: Dict[str, Any]) -> 'AppiumConfig':
         """
-        从字典创建配置对象
+        Create configuration object from dictionary
         
         Args:
-            config_dict: 配置字典
+            config_dict: Configuration dictionary
             
         Returns:
-            AppiumConfig: 配置对象
+            AppiumConfig: Configuration object
         """
         return cls(**config_dict)
     
     @classmethod
     def from_file(cls, filepath: str) -> 'AppiumConfig':
         """
-        从文件加载配置
+        Load configuration from file
         
         Args:
-            filepath: 配置文件路径
+            filepath: Configuration file path
             
         Returns:
-            AppiumConfig: 配置对象
+            AppiumConfig: Configuration object
         """
         try:
             if filepath.endswith('.json'):
@@ -201,10 +201,10 @@ class AppiumConfig:
     
     def save_to_file(self, filepath: str):
         """
-        保存配置到文件
+        Save configuration to file
         
         Args:
-            filepath: 文件路径
+            filepath: File path
         """
         try:
             config_dict = self.to_dict()
@@ -224,21 +224,21 @@ class AppiumConfig:
     
     def validate(self) -> bool:
         """
-        验证配置
+        Validate configuration
         
         Returns:
-            bool: 配置是否有效
+            bool: Whether configuration is valid
         """
         errors = []
         
-        # 检查必需字段
+        # Check required fields
         if not self.platform_name:
             errors.append("platform_name is required")
         
         if not self.automation_name:
             errors.append("automation_name is required")
         
-        # 检查平台特定字段
+        # Check platform-specific fields
         if self.platform_name.lower() == 'android':
             if not self.app_package and not self.app_path:
                 errors.append("Either app_package or app_path is required for Android")

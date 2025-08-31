@@ -1,6 +1,6 @@
 """
 Search Page Object for Monoxer App
-Monoxer应用搜索页面对象
+Search page object for Monoxer App
 """
 
 import time
@@ -14,26 +14,27 @@ from datas.test_data import MonoxerTestData
 
 
 class SearchPage(PageObject):
-    """Monoxer应用搜索页面对象"""
+    """Search page object for Monoxer App"""
     
-    def __init__(self, driver):
+    def __init__(self, driver, test_data=None):
         super().__init__(driver)
-        self.wait = WebDriverWait(driver, MonoxerTestData.WAIT_TIME)
+        self.test_data = test_data or MonoxerTestData
+        self.wait = WebDriverWait(driver, self.test_data.WAIT_TIME)
     
     def click_search_tab(self) -> bool:
         """
-        点击搜索标签
+        Click search tab
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             search_tab = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ID, MonoxerTestData.Locators.SEARCH_TAB)
+                (AppiumBy.ID, self.test_data.Locators.SEARCH_TAB)
             ))
             search_tab.click()
             Log.info("Clicked search tab")
-            time.sleep(2)  # 等待搜索页面加载
+            time.sleep(2)  # Wait for search page to load
             return True
         except Exception as e:
             Log.error(f"Failed to click search tab: {str(e)}")
@@ -41,38 +42,38 @@ class SearchPage(PageObject):
     
     def search_keyword(self, keyword: str) -> bool:
         """
-        搜索关键词
+        Search keyword
         
         Args:
-            keyword: 搜索关键词
+            keyword: Search keyword
             
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
-            # 尝试多种方法找到搜索输入框
+            # Try multiple methods to find search input field
             search_input = None
             
-            # 方法1: 尝试search_src_text ID
+            # Method 1: Try search_src_text ID
             try:
                 search_input = self.wait.until(EC.element_to_be_clickable(
-                    (AppiumBy.ID, MonoxerTestData.Locators.SEARCH_INPUT)
+                    (AppiumBy.ID, self.test_data.Locators.SEARCH_INPUT)
                 ))
                 Log.info("Found search input with search_src_text ID")
             except:
-                # 方法2: 尝试search_view ID
+                # Method 2: Try search_view ID
                 try:
                     search_input = self.wait.until(EC.element_to_be_clickable(
-                        (AppiumBy.ID, MonoxerTestData.Locators.SEARCH_VIEW)
+                        (AppiumBy.ID, self.test_data.Locators.SEARCH_VIEW)
                     ))
                     Log.info("Found search input with search_view ID")
                 except:
-                    # 方法3: 尝试AutoCompleteTextView类
+                    # Method 3: Try AutoCompleteTextView class
                     try:
                         search_input = self.driver.find_element(AppiumBy.CLASS_NAME, "android.widget.AutoCompleteTextView")
                         Log.info("Found search input with AutoCompleteTextView class")
                     except:
-                        # 方法4: 尝试UiAutomator
+                        # Method 4: Try UiAutomator
                         try:
                             search_input = self.driver.find_element(AppiumBy.ANDROID_UIAUTOMATOR, 
                                 'new UiSelector().className("android.widget.AutoCompleteTextView")')
@@ -82,21 +83,21 @@ class SearchPage(PageObject):
                             return False
             
             if search_input:
-                # 点击搜索输入框
+                # Click search input field
                 search_input.click()
                 Log.info("Clicked search input field")
                 
-                # 重新查找元素避免stale element reference
+                # Re-find element to avoid stale element reference
                 try:
                     search_input = self.wait.until(EC.element_to_be_clickable(
-                        (AppiumBy.ID, MonoxerTestData.Locators.SEARCH_INPUT)
+                        (AppiumBy.ID, self.test_data.Locators.SEARCH_INPUT)
                     ))
-                    # 清空并输入搜索查询
+                    # Clear and enter search query
                     search_input.clear()
                     search_input.send_keys(keyword)
                     Log.info(f"Typed search query: {keyword}")
                 except:
-                    # 尝试替代方法
+                    # Try alternative method
                     try:
                         search_input = self.driver.find_element(AppiumBy.CLASS_NAME, "android.widget.AutoCompleteTextView")
                         search_input.clear()
@@ -106,7 +107,7 @@ class SearchPage(PageObject):
                         Log.error(f"Failed to type in search field: {str(e)}")
                         return False
                 
-                # 等待搜索结果
+                # Wait for search results
                 Log.info("Waiting for search results...")
                 time.sleep(3)
                 return True
@@ -119,18 +120,18 @@ class SearchPage(PageObject):
     
     def click_first_result(self) -> bool:
         """
-        点击第一个搜索结果
+        Click first search result
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             first_result = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ID, MonoxerTestData.Locators.CARD_VIEW)
+                (AppiumBy.ID, self.test_data.Locators.CARD_VIEW)
             ))
             first_result.click()
             Log.info("Clicked first search result")
-            time.sleep(2)  # 等待详情页面加载
+            time.sleep(2)  # Wait for detail page to load
             return True
         except Exception as e:
             Log.error(f"Search result not found: {str(e)}")
@@ -138,18 +139,18 @@ class SearchPage(PageObject):
     
     def click_contents_button(self) -> bool:
         """
-        点击contents按钮
+        Click contents button
         
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             contents_btn = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ID, MonoxerTestData.Locators.CONTENTS_BTN)
+                (AppiumBy.ID, self.test_data.Locators.CONTENTS_BTN)
             ))
             contents_btn.click()
             Log.info("Clicked contents button")
-            time.sleep(2)  # 等待contents页面加载
+            time.sleep(2)  # Wait for contents page to load
             return True
         except Exception as e:
             Log.error(f"Contents button not found: {str(e)}")
@@ -157,13 +158,13 @@ class SearchPage(PageObject):
     
     def click_back_multiple_times(self, times: int = 4) -> bool:
         """
-        多次点击返回按钮
+        Click back button multiple times
         
         Args:
-            times: 点击次数
+            times: Number of clicks
             
         Returns:
-            bool: 是否成功
+            bool: Whether successful
         """
         try:
             for i in range(times):
@@ -173,7 +174,7 @@ class SearchPage(PageObject):
                     ))
                     back_btn.click()
                     Log.info(f"Clicked back button ({i+1}/{times})")
-                    time.sleep(1)  # 点击间隔等待
+                    time.sleep(1)  # Wait between clicks
                 except Exception as e:
                     Log.warning(f"Failed to click back button ({i+1}/{times}): {str(e)}")
                     break

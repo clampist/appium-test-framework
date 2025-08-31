@@ -1,108 +1,110 @@
 """
 Pytest configuration for Monoxer App tests
-Monoxer应用测试的pytest配置
+Pytest configuration for Monoxer App tests
 """
 
-import os
 import sys
+import os
 import pytest
+from appium import webdriver
+from appium.options.common.base import AppiumOptions
 
 # Add project root to Python path
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-from core.driver.appium_driver import AppiumDriver
-from core.config.appium_config import AppiumConfig
-from core.config.device_config import DeviceConfig
-from core.config.app_config import AppConfig
 from core.utils.logger import Log
+from datas.test_data import get_test_data
+from configs.config_manager import get_appium_config, get_server_config
+
+
+def pytest_addoption(parser):
+    """Add custom command line options"""
+    parser.addoption(
+        "--language", 
+        action="store", 
+        default="en", 
+        choices=["en", "ja"],
+        help="Language for testing (en/ja)"
+    )
 
 
 @pytest.fixture(scope="session")
-def appium_config():
-    """Appium configuration fixture for Monoxer App"""
-    config = AppiumConfig(
-        server_url="http://127.0.0.1:4723",
-        platform_name="Android",
-        platform_version="13",
-        device_name="emulator-5554",
-        automation_name="UiAutomator2",
-        app_package="com.monoxer",
-        app_activity="com.monoxer.view.main.MainActivity",
-        timeout=15,
-        no_reset=True,
-        additional_capabilities={
-            "ensureWebviewsHavePages": True,
-            "nativeWebScreenshot": True,
-            "newCommandTimeout": 3600,
-            "connectHardwareKeyboard": True
-        }
-    )
-    
-    Log.info("Created Appium config for Monoxer App")
-    return config
+def language(request):
+    """Get language from command line option"""
+    return request.config.getoption("--language")
 
 
 @pytest.fixture(scope="session")
-def device_config():
-    """Device configuration fixture for Monoxer App"""
-    config = DeviceConfig(
-        device_name="emulator-5554",
-        platform="Android",
-        platform_version="13",
-        manufacturer="Google",
-        model="Android Emulator"
-    )
-    
-    Log.info("Created device config for Monoxer App")
-    return config
+def test_data(language):
+    """Get test data based on language"""
+    return get_test_data(language)
 
 
 @pytest.fixture(scope="session")
-def app_config():
-    """Application configuration fixture for Monoxer App"""
-    config = AppConfig(
-        app_name="Monoxer",
-        app_version="1.0.0",
-        app_package="com.monoxer",
-        app_activity="com.monoxer.view.main.MainActivity",
-        app_type="native",
-        launch_timeout=30,
-        startup_timeout=60
-    )
-    
-    Log.info("Created app config for Monoxer App")
-    return config
+def appium_config(language):
+    """Get Appium configuration based on language"""
+    return get_appium_config(language)
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def driver(appium_config):
-    """Appium driver fixture for Monoxer App"""
-    driver = AppiumDriver(appium_config)
+    """Create and manage Appium driver"""
+    Log.info(f"Creating Appium driver with config: {appium_config}")
     
-    try:
-        Log.info("Starting Appium driver for Monoxer App test")
-        driver.start_driver()
-        yield driver
-    finally:
-        Log.info("Quitting Appium driver after Monoxer App test")
-        driver.quit_driver()
+    options = AppiumOptions()
+    options.load_capabilities(appium_config)
+    
+    # Get server configuration
+    server_config = get_server_config()
+    server_url = f"http://{server_config['host']}:{server_config['port']}{server_config['path']}"
+    
+    driver = webdriver.Remote(server_url, options=options)
+    
+    Log.info("Appium driver created successfully")
+    
+    yield driver
+    
+    Log.info("Closing Appium driver")
+    driver.quit()
 
 
-@pytest.fixture(scope="function")
-def test_data():
-    """Test data fixture for Monoxer App"""
-    return {
-        "app_package": "com.monoxer",
-        "wait_time": 15,
-        "popup_timeout": 5,
-        "screenshot_dir": "screenshots"
-    }
+@pytest.fixture(autouse=True)
+def allure_attachments(request, driver):
+    """Automatically attach screenshots and page source on test failure"""
+    yield
+    
+    # Check if test failed
+    if request.node.rep_call.failed:
+        from core.utils.allure_utils import attach_screenshot_on_failure, attach_page_source_on_failure
+        
+        test_name = request.node.name
+        Log.info(f"Test '{test_name}' failed, attaching screenshots and page source to Allure report")
+        
+        try:
+            # Attach screenshot
+            attach_screenshot_on_failure(driver, test_name)
+            
+            # Attach page source
+            attach_page_source_on_failure(driver, test_name)
+            
+        except Exception as e:
+            Log.error(f"Failed to attach failure artifacts: {str(e)}")
+
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    """Hook to capture test result for failure handling"""
+    outcome = yield
+    rep = outcome.get_result()
+    
+    # Set the report attribute on the item
+    setattr(item, f"rep_{rep.when}", rep)
 
 
 @pytest.fixture(scope="session", autouse=True)
-def setup_screenshot_management():
+def setup_screenshot_management(language):
     """Setup screenshot management for Monoxer App tests"""
     from core.utils.screenshot_utils import ScreenshotUtils
     from core.utils.logger import Log
@@ -110,10 +112,10 @@ def setup_screenshot_management():
     app_package = "com.monoxer"
     
     # Clear current screenshot directory only at the beginning of session
-    Log.info("Setting up screenshot management for Monoxer App tests")
+    Log.info(f"Setting up screenshot management for Monoxer App tests (Language: {language})")
     ScreenshotUtils.clear_screenshot_directory(app_package)
     
     yield
     
-    # 测试会话结束后的清理工作
+    # Cleanup after test session
     Log.info("Cleaning up screenshot management for Monoxer App tests")

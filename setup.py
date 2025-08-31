@@ -11,7 +11,7 @@ setup(
     version="1.0.0",
     author="ATF Team",
     author_email="atf@example.com",
-    description="Appium Test Framework - 基于Appium的Python测试框架",
+    description="Appium Test Framework - Python testing framework based on Appium",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/your-org/atf",

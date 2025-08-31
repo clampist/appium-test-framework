@@ -1,6 +1,6 @@
 """
 Page objects for RoadSync Duo
-RoadSync Duo的页面对象
+Page objects for RoadSync Duo
 """
 
 from .login_page import LoginPage
