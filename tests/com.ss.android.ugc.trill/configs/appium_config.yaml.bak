@@ -1,0 +1,64 @@
+# Appium Configuration for TikTok Tests
+# This file contains Appium capabilities for different language environments
+
+# Common Appium capabilities shared across all environments
+common:
+  platformName: "Android"
+  automationName: "UiAutomator2"
+  appPackage: "com.ss.android.ugc.trill"
+  appActivity: "com.ss.android.ugc.aweme.splash.SplashActivity"
+  noReset: "true"
+  autoGrantPermissions: "true"
+  newCommandTimeout: 300
+  adbExecTimeout: 60000
+  uiautomator2ServerLaunchTimeout: 60000
+  uiautomator2ServerInstallTimeout: 60000
+  androidInstallTimeout: 90000
+  avdLaunchTimeout: 60000
+  avdReadyTimeout: 60000
+  androidDeviceReadyTimeout: 60000
+  systemPort: 8200
+
+# Environment-specific configurations
+environments:
+  # English environment (default)
+  en:
+    platformVersion: "13"
+    deviceName: "emulator-5554"
+    description: "English version - Android 13 emulator"
+    # No locale setting to avoid compatibility issues
+    
+  # Chinese environment
+  zh:
+    platformVersion: "13"
+    deviceName: "emulator-5554"
+    description: "Chinese version - Android 13 emulator"
+    locale: "zh_CN"
+    language: "zh"
+
+# Appium server configuration
+server:
+  host: "127.0.0.1"
+  port: 4723
+  path: "/wd/hub"
+  
+# Timeout configurations
+timeouts:
+  implicit_wait: 10
+  explicit_wait: 15
+  page_load: 30
+  video_wait: 3
+  animation_wait: 2
+  loading_wait: 5
+  
+# Screenshot configurations
+screenshots:
+  enabled: true
+  format: "png"
+  quality: 90
+  
+# Logging configurations
+logging:
+  level: "INFO"
+  save_logs: true
+  log_dir: "logs"
