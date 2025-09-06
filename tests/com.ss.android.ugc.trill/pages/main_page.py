@@ -48,19 +48,6 @@ class MainPage(PageObject):
             Log.error(f"Failed to click friends tab: {str(e)}")
             return False
     
-    def click_create_tab(self) -> bool:
-        """Click Create tab"""
-        try:
-            create_tab = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ID, self.test_data.CommonLocators.CREATE_TAB)
-            ))
-            create_tab.click()
-            Log.info("Clicked create tab")
-            time.sleep(self.test_data.CommonTestData.ANIMATION_WAIT_TIME)
-            return True
-        except Exception as e:
-            Log.error(f"Failed to click create tab: {str(e)}")
-            return False
     
     def click_inbox_tab(self) -> bool:
         """Click Inbox tab"""
@@ -112,30 +99,25 @@ class MainPage(PageObject):
             Log.warning(f"Permission dialog not found or already handled: {str(e)}")
             return True
 
-    def close_create_tab(self) -> bool:
-        """Close create tab by clicking the close button"""
+
+    def click_create_tab_and_close(self) -> bool:
+        """Click create tab and then close it"""
         try:
+            # Click create tab
+            create_tab = self.wait.until(EC.element_to_be_clickable(
+                (AppiumBy.ID, self.test_data.CommonLocators.CREATE_TAB)
+            ))
+            create_tab.click()
+            Log.info("Clicked create tab")
+            time.sleep(self.test_data.CommonTestData.ANIMATION_WAIT_TIME)
+            
+            # Close create tab
             close_btn = self.wait.until(EC.element_to_be_clickable(
                 (AppiumBy.ID, self.test_data.CommonLocators.CREATE_CLOSE_BTN)
             ))
             close_btn.click()
             Log.info("Closed create tab")
             time.sleep(self.test_data.CommonTestData.ANIMATION_WAIT_TIME)
-            return True
-        except Exception as e:
-            Log.error(f"Failed to close create tab: {str(e)}")
-            return False
-
-    def click_create_tab_and_close(self) -> bool:
-        """Click create tab and then close it"""
-        try:
-            # Click create tab
-            if not self.click_create_tab():
-                return False
-            
-            # Close create tab
-            if not self.close_create_tab():
-                return False
             
             Log.info("Successfully clicked and closed create tab")
             return True

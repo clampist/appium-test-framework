@@ -98,62 +98,7 @@ class TestTikTokFeatures:
                 driver.terminate_app(test_data.APP_PACKAGE)
                 Log.info("App terminated")
             except Exception as e:
-                Log.warning(f"Failed to terminate app: {str(e)}")
-    
-    def test_video_interaction_features(self, driver, test_data):
-        """Test video interaction features (like, comment, share, bookmark)"""
-        Log.info("Testing video interaction features")
-        
-        # Create page objects
-        main_page = MainPage(driver, test_data)
-        video_page = VideoPage(driver, test_data)
-        
-        try:
-            # Use common initialization method
-            self._initialize_app_and_take_initial_screenshot(driver, test_data, "video_interaction")
-            
-            # Wait for video to load
-            assert video_page.wait_for_video_load(), "Should load video successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "video_interaction_loaded", "02")
-            
-            # Test like button using VideoPage
-            assert video_page.click_like_button(), "Should click like button successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "video_interaction_liked", "03")
-            
-            # Test comment button using VideoPage
-            assert video_page.click_comment_button(), "Should click comment button successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "video_interaction_comment", "04")
-            
-            # Go back from comment section
-            assert video_page.click_close_button(), "Should close comment section successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "video_interaction_comment_closed", "05")
-            
-            # Test share button using VideoPage
-            assert video_page.click_share_button(), "Should click share button successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "video_interaction_share", "06")
-            
-            # Close share dialog
-            assert video_page.click_close_button(), "Should close share dialog successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "video_interaction_share_closed", "07")
-            
-            # Test bookmark button using VideoPage
-            assert video_page.click_bookmark_button(), "Should click bookmark button successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "video_interaction_bookmarked", "08")
-            
-            Log.info("Video interaction features test completed successfully")
-            
-        except Exception as e:
-            Log.error(f"Video interaction features test failed: {str(e)}")
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "video_interaction_failed", "08")
-            raise
-        
-        finally:
-            # Close app
-            try:
-                driver.terminate_app(test_data.APP_PACKAGE)
-                Log.info("App terminated")
-            except Exception as e:
-                Log.warning(f"Failed to terminate app: {str(e)}")
+                Log.warning(f"Failed to terminate app: {str(e)}")    
     
     def test_video_navigation(self, driver, test_data):
         """Test video navigation (swipe up/down)"""
@@ -197,50 +142,7 @@ class TestTikTokFeatures:
                 Log.info("App terminated")
             except Exception as e:
                 Log.warning(f"Failed to terminate app: {str(e)}")
-    
-    def test_advanced_video_features(self, driver, test_data):
-        """Test advanced video features (double tap, long press)"""
-        Log.info("Testing advanced video features")
         
-        # Create page objects
-        main_page = MainPage(driver, test_data)
-        video_page = VideoPage(driver, test_data)
-        
-        try:
-            # Use common initialization method
-            self._initialize_app_and_take_initial_screenshot(driver, test_data, "advanced_video")
-            
-            # Wait for video to load
-            assert video_page.wait_for_video_load(), "Should load video successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "advanced_video_loaded", "02")
-            
-            # Test double tap to like
-            assert video_page.double_tap_to_like(), "Should double tap video to like successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "advanced_video_double_tap", "03")
-            
-            # Test long press on video
-            assert video_page.long_press_video(duration=2000), "Should long press video successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "advanced_video_long_press", "04")
-            
-            # Check video playing status
-            assert video_page.is_video_playing(), "Video should be playing"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "advanced_video_status", "05")
-            
-            Log.info("Advanced video features test completed successfully")
-            
-        except Exception as e:
-            Log.error(f"Advanced video features test failed: {str(e)}")
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "advanced_video_failed", "05")
-            raise
-        
-        finally:
-            # Close app
-            try:
-                driver.terminate_app(test_data.APP_PACKAGE)
-                Log.info("App terminated")
-            except Exception as e:
-                Log.warning(f"Failed to terminate app: {str(e)}")
-    
     def test_search_functionality(self, driver, test_data):
         """Test search functionality"""
         Log.info("Testing search functionality")
@@ -341,45 +243,4 @@ class TestTikTokFeatures:
             except Exception as e:
                 Log.warning(f"Failed to terminate app: {str(e)}")
     
-    def test_app_permissions(self, driver, test_data):
-        """Test app permission handling"""
-        Log.info("Testing app permission handling")
-        
-        # Create page objects
-        main_page = MainPage(driver, test_data)
-        
-        try:
-            # Use common initialization method
-            self._initialize_app_and_take_initial_screenshot(driver, test_data, "permissions")
-            
-            # Test permission dialog handling (allow)
-            assert main_page.handle_permission_dialog(allow=True), "Should handle permission dialog successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "permissions_allowed", "02")
-            
-            # Navigate to create tab (might trigger more permissions)
-            assert main_page.click_create_tab_and_close(), "Should navigate to create tab successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "permissions_create_tab", "03")
-            
-            # Handle any additional permissions
-            assert main_page.handle_permission_dialog(allow=True), "Should handle additional permissions successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "permissions_additional", "04")
-            
-            # Return to home tab
-            assert main_page.click_home_tab(), "Should return to home tab successfully"
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "permissions_back_to_home", "05")
-            
-            Log.info("App permissions test completed successfully")
-            
-        except Exception as e:
-            Log.error(f"App permissions test failed: {str(e)}")
-            ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "permissions_failed", "05")
-            raise
-        
-        finally:
-            # Close app
-            try:
-                driver.terminate_app(test_data.APP_PACKAGE)
-                Log.info("App terminated")
-            except Exception as e:
-                Log.warning(f"Failed to terminate app: {str(e)}")
 

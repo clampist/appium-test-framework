@@ -27,10 +27,7 @@ class BaseTikTokTestData:
         PROFILE_TAB = "com.ss.android.ugc.trill:id/lb0"
         
         # Common buttons
-        CLOSE_BTN = "com.ss.android.ugc.trill:id/close_button"
         BACK_BTN = "com.ss.android.ugc.trill:id/b2t"
-        SKIP_BTN = "com.ss.android.ugc.trill:id/skip_button"
-        CONTINUE_BTN = "com.ss.android.ugc.trill:id/continue_button"
         CREATE_CLOSE_BTN = "com.ss.android.ugc.trill:id/neq"
         CLOSE_ICON_BTN = 'new UiSelector().description("Close")'
         
@@ -48,7 +45,6 @@ class BaseTikTokTestData:
         # Profile elements
         PROFILE_AVATAR = "com.ss.android.ugc.trill:id/az_"
         USERNAME_TEXT = "com.ss.android.ugc.trill:id/osw"
-        FOLLOW_BTN = "com.ss.android.ugc.trill:id/follow_button"
         
         # Permission dialogs
         PERMISSION_ALLOW_BTN = "com.android.packageinstaller:id/permission_allow_button"

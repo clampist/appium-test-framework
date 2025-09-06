@@ -20,23 +20,18 @@ class SearchPage(PageObject):
         self.test_data = test_data or BaseTikTokTestData()
         self.wait = WebDriverWait(driver, self.test_data.WAIT_TIME)
     
-    def click_search_bar(self) -> bool:
-        """Click search bar to open search"""
+    def search_for_keyword(self, keyword: str) -> bool:
+        """Complete search flow for a keyword"""
         try:
+            # Click search bar
             search_bar = self.wait.until(EC.element_to_be_clickable(
                 (AppiumBy.ID, self.test_data.CommonLocators.SEARCH_BAR)
             ))
             search_bar.click()
             Log.info("Clicked search bar")
             time.sleep(self.test_data.CommonTestData.ANIMATION_WAIT_TIME)
-            return True
-        except Exception as e:
-            Log.error(f"Failed to click search bar: {str(e)}")
-            return False
-    
-    def enter_search_keyword(self, keyword: str) -> bool:
-        """Enter search keyword"""
-        try:
+            
+            # Enter keyword
             search_input = self.wait.until(EC.element_to_be_clickable(
                 (AppiumBy.ID, self.test_data.CommonLocators.SEARCH_INPUT)
             ))
@@ -44,39 +39,14 @@ class SearchPage(PageObject):
             search_input.send_keys(keyword)
             Log.info(f"Entered search keyword: {keyword}")
             time.sleep(1)
-            return True
-        except Exception as e:
-            Log.error(f"Failed to enter search keyword: {str(e)}")
-            return False
-    
-    def click_search_button(self) -> bool:
-        """Click search button"""
-        try:
+            
+            # Click search button
             search_btn = self.wait.until(EC.element_to_be_clickable(
                 (AppiumBy.ID, self.test_data.CommonLocators.SEARCH_BTN)
             ))
             search_btn.click()
             Log.info("Clicked search button")
             time.sleep(self.test_data.CommonTestData.LOADING_WAIT_TIME)
-            return True
-        except Exception as e:
-            Log.error(f"Failed to click search button: {str(e)}")
-            return False
-    
-    def search_for_keyword(self, keyword: str) -> bool:
-        """Complete search flow for a keyword"""
-        try:
-            # Click search bar
-            if not self.click_search_bar():
-                return False
-            
-            # Enter keyword
-            if not self.enter_search_keyword(keyword):
-                return False
-            
-            # Click search button
-            if not self.click_search_button():
-                return False
             
             Log.info(f"Successfully searched for: {keyword}")
             return True
@@ -84,19 +54,6 @@ class SearchPage(PageObject):
             Log.error(f"Search flow failed: {str(e)}")
             return False
     
-    def click_trending_tab(self) -> bool:
-        """Click trending tab"""
-        try:
-            trending_tab = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ANDROID_UIAUTOMATOR, self.test_data.Locators.TRENDING_TEXT)
-            ))
-            trending_tab.click()
-            Log.info("Clicked trending tab")
-            time.sleep(self.test_data.CommonTestData.ANIMATION_WAIT_TIME)
-            return True
-        except Exception as e:
-            Log.error(f"Failed to click trending tab: {str(e)}")
-            return False
     
     def click_first_search_result(self) -> bool:
         """Click first search result"""

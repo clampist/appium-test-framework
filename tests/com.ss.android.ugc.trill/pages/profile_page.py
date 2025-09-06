@@ -47,48 +47,6 @@ class ProfilePage(PageObject):
             Log.error(f"Failed to get username: {str(e)}")
             return ""
     
-    def click_follow_button(self) -> bool:
-        """Click follow button"""
-        try:
-            follow_btn = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ID, self.test_data.CommonLocators.FOLLOW_BTN)
-            ))
-            follow_btn.click()
-            Log.info("Clicked follow button")
-            time.sleep(1)
-            return True
-        except Exception as e:
-            Log.error(f"Failed to click follow button: {str(e)}")
-            return False
-    
-    def click_edit_profile_button(self) -> bool:
-        """Click edit profile button"""
-        try:
-            edit_btn = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ANDROID_UIAUTOMATOR, self.test_data.Locators.EDIT_PROFILE_BTN)
-            ))
-            edit_btn.click()
-            Log.info("Clicked edit profile button")
-            time.sleep(self.test_data.CommonTestData.ANIMATION_WAIT_TIME)
-            return True
-        except Exception as e:
-            Log.error(f"Failed to click edit profile button: {str(e)}")
-            return False
-    
-    def click_settings_button(self) -> bool:
-        """Click settings button"""
-        try:
-            settings_btn = self.wait.until(EC.element_to_be_clickable(
-                (AppiumBy.ANDROID_UIAUTOMATOR, self.test_data.Locators.SETTINGS_BTN)
-            ))
-            settings_btn.click()
-            Log.info("Clicked settings button")
-            time.sleep(self.test_data.CommonTestData.ANIMATION_WAIT_TIME)
-            return True
-        except Exception as e:
-            Log.error(f"Failed to click settings button: {str(e)}")
-            return False
-    
     def is_profile_page_loaded(self) -> bool:
         """Check if profile page is loaded"""
         try:
