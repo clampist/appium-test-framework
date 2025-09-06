@@ -5,6 +5,7 @@ TikTok App automated test suite for core features
 
 import pytest
 import time
+import os
 from core.utils.logger import Log
 from core.utils.screenshot_utils import ScreenshotUtils
 from datas.test_data import get_test_data
@@ -51,11 +52,32 @@ class TestTikTokFeatures:
     def teardown_method(self, method):
         """Test method teardown"""
         Log.info(f"Completed test: {method.__name__}")
-        # Screenshot comparison
-        Log.info("Comparing screenshots...")
-        ScreenshotUtils.compare_screenshots("com.ss.android.ugc.trill")
-        # Auto set base screenshots
-        ScreenshotUtils.auto_set_base_if_successful("com.ss.android.ugc.trill")
+        
+        # Get app package from test data
+        from datas.test_data import BaseTikTokTestData
+        app_package = BaseTikTokTestData.APP_PACKAGE
+        
+        # Only perform screenshot operations if we have current screenshots
+        base_dir, cur_dir = ScreenshotUtils._get_screenshot_dirs(app_package)
+        
+        if os.path.exists(cur_dir) and os.listdir(cur_dir):
+            # Screenshot comparison (only if base screenshots exist)
+            if os.path.exists(base_dir) and os.listdir(base_dir):
+                Log.info("Comparing screenshots...")
+                is_identical, identical, differences = ScreenshotUtils.compare_screenshots(app_package)
+                if not is_identical:
+                    Log.warning(f"Found {len(differences)} screenshot differences")
+                else:
+                    Log.info("All screenshots are identical")
+            else:
+                Log.info("No base screenshots found, skipping comparison")
+            
+            # Auto set base screenshots (only if no base exists)
+            if not (os.path.exists(base_dir) and os.listdir(base_dir)):
+                Log.info("Auto-setting base screenshots...")
+                ScreenshotUtils.auto_set_base_if_successful(app_package)
+        else:
+            Log.info("No current screenshots found, skipping screenshot operations")
     
     def test_app_launch_and_navigation(self, driver, test_data):
         """Test app launch and basic navigation"""
@@ -147,8 +169,7 @@ class TestTikTokFeatures:
         """Test search functionality"""
         Log.info("Testing search functionality")
         
-        # Create page objects
-        main_page = MainPage(driver, test_data)
+        # Create page objects        
         search_page = SearchPage(driver, test_data)
         
         try:
