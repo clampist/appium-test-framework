@@ -21,10 +21,13 @@ class SearchPage(PageObject):
         self.wait = WebDriverWait(driver, self.test_data.WAIT_TIME)
     
     def search_for_keyword(self, keyword: str) -> bool:
-        """Complete search flow for a keyword"""
+        """Complete search flow for a keyword (optimized)"""
         try:
+            # Use shorter wait time for faster failure detection
+            short_wait = WebDriverWait(self.driver, 3)  # 3 second timeout
+            
             # Click search bar
-            search_bar = self.wait.until(EC.element_to_be_clickable(
+            search_bar = short_wait.until(EC.element_to_be_clickable(
                 (AppiumBy.ID, self.test_data.CommonLocators.SEARCH_BAR)
             ))
             search_bar.click()
@@ -32,7 +35,7 @@ class SearchPage(PageObject):
             time.sleep(self.test_data.CommonTestData.ANIMATION_WAIT_TIME)
             
             # Enter keyword
-            search_input = self.wait.until(EC.element_to_be_clickable(
+            search_input = short_wait.until(EC.element_to_be_clickable(
                 (AppiumBy.ID, self.test_data.CommonLocators.SEARCH_INPUT)
             ))
             search_input.clear()
@@ -41,7 +44,7 @@ class SearchPage(PageObject):
             time.sleep(1)
             
             # Click search button
-            search_btn = self.wait.until(EC.element_to_be_clickable(
+            search_btn = short_wait.until(EC.element_to_be_clickable(
                 (AppiumBy.ID, self.test_data.CommonLocators.SEARCH_BTN)
             ))
             search_btn.click()

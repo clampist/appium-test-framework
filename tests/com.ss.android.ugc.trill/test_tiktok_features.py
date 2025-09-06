@@ -32,18 +32,28 @@ class TestTikTokFeatures:
         driver.activate_app(test_data.APP_PACKAGE)
         Log.info("TikTok app activated")
         
-        # Wait for app to load
-        time.sleep(5)
+        # Wait for app to load with optimized timeout
+        Log.info("Waiting for app to fully load...")
+        time.sleep(3)  # Further reduced wait time from 5s to 3s
+        
+        # Create main page object first
+        main_page = MainPage(driver, test_data)
+        
+        # Tap screen center to activate app interface (optimization)
+        Log.info("Tapping screen center to activate app interface...")
+        main_page.tap_screen_center()
         
         # Handle permission dialogs if they appear
-        main_page = MainPage(driver, test_data)
-        main_page.handle_permission_dialog(allow=True)
-        
-        # Ensure we start from home page
-        main_page.click_home_tab()
+        # main_page.handle_permission_dialog(allow=True)  # Re-enable permission handling
+        # main_page.tap_screen_center()      
         
         # Take initial screenshot with feature name
         ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, f"{feature_name}_initial", "01")
+        
+        # Tap screen center again after save_screenshot
+        main_page.tap_screen_center()
+        Log.info("Tapping screen center after save_screenshot...")
+        
     
     def setup_method(self, method):
         """Test method setup"""
@@ -90,16 +100,22 @@ class TestTikTokFeatures:
             # Use common initialization method
             self._initialize_app_and_take_initial_screenshot(driver, test_data, "navigation")
             
-            # Test navigation to different tabs
+            # Test navigation to different tabs (optimized)
+            Log.info("Testing tab navigation...")
+            
+            # Friends tab
             assert main_page.click_friends_tab(), "Should navigate to friends tab successfully"
             ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "navigation_friends_tab", "02")
             
+            # Create tab
             assert main_page.click_create_tab_and_close(), "Should navigate to create tab successfully"
             ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "navigation_create_tab", "03")
             
+            # Inbox tab
             assert main_page.click_inbox_tab(), "Should navigate to inbox tab successfully"
             ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "navigation_inbox_tab", "04")
             
+            # Profile tab
             assert main_page.click_profile_tab(), "Should navigate to profile tab successfully"
             ScreenshotUtils.save_screenshot(driver, test_data.APP_PACKAGE, "navigation_profile_tab", "05")
             

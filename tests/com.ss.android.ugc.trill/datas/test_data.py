@@ -13,7 +13,7 @@ class BaseTikTokTestData:
     # Application basic information
     APP_PACKAGE = "com.ss.android.ugc.trill"
     APP_ACTIVITY = "com.ss.android.ugc.aweme.splash.SplashActivity"
-    WAIT_TIME = 15
+    WAIT_TIME = 5  # Reduced wait time from 15s to 5s
     
     # Common element locators (language independent)
     class CommonLocators:
@@ -54,8 +54,8 @@ class BaseTikTokTestData:
     class CommonTestData:
         """Common test data (language independent)"""
         VIDEO_WAIT_TIME = 3
-        ANIMATION_WAIT_TIME = 2
-        LOADING_WAIT_TIME = 5
+        ANIMATION_WAIT_TIME = 1  # Reduced animation wait time from 2s to 1s
+        LOADING_WAIT_TIME = 3    # Reduced loading wait time from 5s to 3s
 
 
 class EnglishTikTokTestData(BaseTikTokTestData):

@@ -63,7 +63,7 @@ class ProfilePage(PageObject):
     def click_back_button(self) -> bool:
         """Click back button to return from profile"""
         try:
-            # 首先尝试点击普通的返回按钮
+            # First try to click the regular back button
             try:
                 back_btn = self.wait.until(EC.element_to_be_clickable(
                     (AppiumBy.ID, self.test_data.CommonLocators.BACK_BTN)
@@ -75,7 +75,7 @@ class ProfilePage(PageObject):
             except Exception:
                 Log.info("Back button not found, trying close icon button")
             
-            # 如果普通返回按钮不存在，尝试点击关闭图标按钮
+            # If regular back button not found, try clicking close icon button
             try:
                 close_btn = self.wait.until(EC.element_to_be_clickable(
                     (AppiumBy.ANDROID_UIAUTOMATOR, self.test_data.CommonLocators.CLOSE_ICON_BTN)
@@ -87,7 +87,7 @@ class ProfilePage(PageObject):
             except Exception:
                 Log.info("Close icon button not found, trying alternative methods")
             
-            # 如果上述方法都失败，尝试使用 XPath 定位
+            # If all above methods fail, try using XPath location
             try:
                 close_xpath = '//android.widget.ImageView[@content-desc="Close"]'
                 close_btn = self.wait.until(EC.element_to_be_clickable(
