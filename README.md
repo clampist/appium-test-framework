@@ -21,6 +21,14 @@ A modern, pytest-based mobile automation testing framework built on Appium. Feat
 - 🔄 **Cross-Platform Support**: Android and iOS testing capabilities
 - 🗄️ **API Integration**: RESTful API client and server for test data management
 
+## 🎬 Demo
+
+Watch ATF Framework in action with our TikTok app automation demo:
+
+![TikTok Appium Demo](https://github.com/your-repo/raw/main/demo/tiktok-appium-example.gif)
+
+*This demo showcases automated testing of TikTok app features including video browsing, user interactions, and content discovery using the ATF Framework.*
+
 ## 📚 Documentation
 
 - **[Quick Start Guide](docs/01_quick_start.md)** - Get up and running in minutes
